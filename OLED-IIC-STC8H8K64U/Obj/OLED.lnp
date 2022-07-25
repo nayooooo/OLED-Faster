@@ -1,0 +1,10 @@
+"..\Obj\delay.obj",
+"..\Obj\GPIO.obj",
+"..\Obj\main.obj",
+"..\Obj\led.obj",
+"..\Obj\screen.obj",
+"..\Obj\oled.obj",
+"..\Obj\iic.obj" 
+TO "..\Obj\OLED" 
+PRINT(".\Listings\OLED.m51") RAMSIZE(256) 
+DISABLEWARNING (16) 

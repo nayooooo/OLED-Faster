@@ -1,0 +1,39 @@
+C51 COMPILER V9.54   LED                                                                   07/26/2022 01:51:33 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN ..\Obj\led.obj
+COMPILER INVOKED BY: D:\keil 5 - C51\C51\BIN\C51.EXE ..\Hardware\LED\led.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Fwli
+                    -b;..\Hardware\LED;..\Hardware\OLED;..\Software\IIC;..\User) DEBUG OBJECTEXTEND PRINT(.\Listings\led.lst) OBJECT(..\Obj\l
+                    -ed.obj)
+
+line level    source
+
+   1          #include "led.h"
+   2          #include "GPIO.h"
+   3          
+   4          void LED_GPIO_Config(void)
+   5          {
+   6   1              GPIO_InitTypeDef GPIO_InitStructure;
+   7   1              
+   8   1              GPIO_InitStructure.Mode = GPIO_OUT_PP;  // 普通推挽输出
+   9   1              GPIO_InitStructure.Pin = LED_0_Pin|LED_1_Pin;  // P4.5 P4.6
+  10   1              GPIO_Inilize(LED_GPIO_Port, &GPIO_InitStructure);
+  11   1              
+  12   1              // 熄灭所有LED
+  13   1              LED(0) = LED_OFF; LED(1) = LED_OFF;
+  14   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     26    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       2
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

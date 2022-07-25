@@ -1,0 +1,275 @@
+C51 COMPILER V9.54   IIC                                                                   07/26/2022 01:51:33 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE IIC
+OBJECT MODULE PLACED IN ..\Obj\iic.obj
+COMPILER INVOKED BY: D:\keil 5 - C51\C51\BIN\C51.EXE ..\Software\IIC\iic.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Fwli
+                    -b;..\Hardware\LED;..\Hardware\OLED;..\Software\IIC;..\User) DEBUG OBJECTEXTEND PRINT(.\Listings\iic.lst) OBJECT(..\Obj\i
+                    -ic.obj)
+
+line level    source
+
+   1          /**
+   2           * @file iic.c
+   3           * @details 24.000MHz、1T
+   4           * @chip STC8H8K64U
+   5           */
+   6          #include "iic.h"
+   7          #include "delay.h"
+   8          #include "GPIO.h"
+   9          
+  10          #include "oled.h"
+  11          
+  12          /**********************************************
+  13          //              GND -> GND
+  14          //              VCC -> VCC
+  15          //              SDA -> P1.4
+  16          //              SCL -> P1.5
+  17          **********************************************/
+  18          
+  19          /* 配置IIC接口 -------------------------------------*/
+  20          void IIC_GPIO_Config(void)
+  21          {                                            
+  22   1              GPIO_InitTypeDef GPIO_InitStructure;
+  23   1              
+  24   1              GPIO_InitStructure.Mode = GPIO_OUT_OD;          // 开漏输出
+  25   1              GPIO_InitStructure.Pin = SDA_Pin|SCL_Pin;       // IIC_SDA IIC_SCL
+  26   1              GPIO_Inilize(IIC_GPIO_Port, &GPIO_InitStructure);
+  27   1      }
+  28          
+  29          /* IIC读写函数 -------------------------------------*/
+  30          /* 慢速读写 ----------------------------------------*/
+  31          void IIC_WR_Byte(u8 dat, u8 cmd)
+  32          {
+  33   1              IIC_Start();
+  34   1              IIC_Send_Byte(SLAVE_ADDRESS);            // Slave address
+  35   1              IIC_Wait_Ack(); 
+  36   1              if(cmd)                 // 数据
+  37   1              {
+  38   2                      IIC_Send_Byte(OLED_DATA_CHR);
+  39   2              }
+  40   1              else                    // 命令
+  41   1              {
+  42   2                      IIC_Send_Byte(OLED_CMD_CHR);
+  43   2              }
+  44   1              IIC_Wait_Ack();
+  45   1              IIC_Send_Byte(dat);
+  46   1              IIC_Wait_Ack();
+  47   1              IIC_Stop();
+  48   1      }
+  49          
+  50          void IIC_WR_Byte_Dat(u8 dat)
+  51          {
+  52   1              IIC_Start();
+  53   1              IIC_Send_Byte(SLAVE_ADDRESS);            // Slave address
+C51 COMPILER V9.54   IIC                                                                   07/26/2022 01:51:33 PAGE 2   
+
+  54   1              IIC_Wait_Ack();
+  55   1              IIC_Send_Byte(OLED_DATA_CHR);
+  56   1              IIC_Wait_Ack();
+  57   1              IIC_Send_Byte(dat);
+  58   1              IIC_Wait_Ack();
+  59   1              IIC_Stop();
+  60   1      }
+  61          
+  62          void IIC_WR_Byte_Cmd(u8 cmd)
+  63          {
+  64   1              IIC_Start();
+  65   1              IIC_Send_Byte(SLAVE_ADDRESS);            // Slave address
+  66   1              IIC_Wait_Ack();
+  67   1              IIC_Send_Byte(OLED_CMD_CHR);
+  68   1              IIC_Wait_Ack();
+  69   1              IIC_Send_Byte(cmd);
+  70   1              IIC_Wait_Ack();
+  71   1              IIC_Stop();
+  72   1      }
+  73          /* 快速读写 ----------------------------------------*/
+  74          /**
+  75           * @fn void IIC_WR_Byte_Fast(u8 dat, u8 cmd, u8 *buf)
+  76           * @param[buf] 需要传输的数据数组的首地址
+  77           * @param[size] 需要传输的数据数组的大小
+  78           * @param[cmd] 需要传输的数据是数据/命令
+  79           */
+  80          void IIC_WR_Byte_Fast(u8 *buf, u16 size, u8 cmd)
+  81          {
+  82   1              IIC_Start();
+  83   1              IIC_Send_Byte(SLAVE_ADDRESS);            // Slave address
+  84   1              IIC_Wait_Ack();
+  85   1              if(cmd)                 // 数据
+  86   1              {
+  87   2                      IIC_Send_Byte(OLED_DATA_CHR);
+  88   2              }
+  89   1              else                    // 命令
+  90   1              {
+  91   2                      IIC_Send_Byte(OLED_CMD_CHR);
+  92   2              }
+  93   1              IIC_Wait_Ack();
+  94   1              while(size--){
+  95   2                      IIC_Send_Byte(*buf);
+  96   2                      IIC_Wait_Ack();
+  97   2                      buf++;
+  98   2              }
+  99   1              IIC_Stop();
+ 100   1      }
+ 101          
+ 102          /**
+ 103           * @fn void IIC_WR_Byte_Dat_Fast(u8 *Dat_Buf, u16 size)
+ 104           * @param[Dat_Buf] 需要传输的数据数组的首地址
+ 105           * @param[size] 需要传输的数据数组的大小
+ 106           */
+ 107          void IIC_WR_Byte_Dat_Fast(u8 *Dat_Buf, u16 size)
+ 108          {
+ 109   1              IIC_Start();
+ 110   1              IIC_Send_Byte(SLAVE_ADDRESS);            // Slave address
+ 111   1              IIC_Wait_Ack();
+ 112   1              IIC_Send_Byte(OLED_DATA_CHR);
+ 113   1              IIC_Wait_Ack();
+ 114   1              while(size--){
+ 115   2                      IIC_Send_Byte(*Dat_Buf);
+C51 COMPILER V9.54   IIC                                                                   07/26/2022 01:51:33 PAGE 3   
+
+ 116   2                      IIC_Wait_Ack();
+ 117   2                      Dat_Buf++;
+ 118   2              }
+ 119   1              IIC_Stop();
+ 120   1      }
+ 121          
+ 122          
+ 123          /**
+ 124           * @fn void IIC_WR_Byte_Cmd_Fast(u8 *Cmd_Buf, u16 size)
+ 125           * @param[Cmd_Buf] 需要传输的命令数组的首地址
+ 126           * @param[size] 需要传输的命令数组的大小
+ 127           */
+ 128          void IIC_WR_Byte_Cmd_Fast(u8 *Cmd_Buf, u16 size)
+ 129          {
+ 130   1              IIC_Start();
+ 131   1              IIC_Send_Byte(SLAVE_ADDRESS);            // Slave address
+ 132   1              IIC_Wait_Ack();
+ 133   1              IIC_Send_Byte(OLED_CMD_CHR);
+ 134   1              IIC_Wait_Ack();
+ 135   1              while(size--){
+ 136   2                      IIC_Send_Byte(*Cmd_Buf);
+ 137   2                      IIC_Wait_Ack();
+ 138   2              }
+ 139   1              IIC_Stop();
+ 140   1      }
+ 141          
+ 142          
+ 143          /* 本地协议函数 -----------------------------------*/
+ 144          // IIC起始信号
+ 145          static void IIC_Start(void)
+ 146          {
+ 147   1              SDA_Clr();
+ 148   1              SCL_Clr();
+ 149   1              delay_5_us(1);
+ 150   1              SDA_Set();
+ 151   1              delay_5_us(1);
+ 152   1              SCL_Set();
+ 153   1      }         
+ 154          
+ 155          // IIC停止信号
+ 156          static void IIC_Stop(void)
+ 157          {
+ 158   1              SCL_Set();
+ 159   1              SDA_Set();
+ 160   1              SCL_Clr();
+ 161   1              NOP2();         // 需要延时0.6us，实际上延时了0.83us
+ 162   1              SDA_Clr();
+ 163   1              NOP4();         // 需要延时1.3us，实际上延时了1.67us
+ 164   1      }
+ 165          
+ 166          // IIC等待应答
+ 167          static u8 IIC_Wait_Ack(void)
+ 168          {
+ 169   1              u8 ucErrTime=0;
+ 170   1              SDA_IN();      // SDA输入
+ 171   1              SCL_Clr();
+ 172   1              NOP1(); // 需要延时us，实际上延时了0.42us
+ 173   1              while(READ_SDA)
+ 174   1              {
+ 175   2                      ucErrTime++;
+ 176   2                      if(ucErrTime>250)
+ 177   2                      {
+C51 COMPILER V9.54   IIC                                                                   07/26/2022 01:51:33 PAGE 4   
+
+ 178   3                              IIC_Stop();
+ 179   3                              return 1;
+ 180   3                      }
+ 181   2              }
+ 182   1              SCL_Set();
+ 183   1              return 0;  
+ 184   1      } 
+ 185          
+ 186          // IIC应答
+ 187          static void IIC_Ack(void)
+ 188          {
+ 189   1              SCL_Set();
+ 190   1              SDA_Set();
+ 191   1              delay_1_us(3);          // 需要延时2us，实际上延时了2.5us
+ 192   1              SCL_Clr();
+ 193   1              delay_1_us(3);          // 需要延时2us，实际上延时了2.5us
+ 194   1              SCL_Set();
+ 195   1      }
+ 196          
+ 197          // IIC不应答
+ 198          static void IIC_NAck(void)
+ 199          {
+ 200   1              SCL_Set();
+ 201   1              SDA_Clr();
+ 202   1              delay_1_us(3);          // 需要延时2us，实际上延时了2.5us
+ 203   1              SCL_Clr();
+ 204   1              delay_1_us(3);          // 需要延时2us，实际上延时了2.5us
+ 205   1              SCL_Set();
+ 206   1      }
+ 207          
+ 208          // IIC发送一字节
+ 209          static void IIC_Send_Byte(u8 txd)
+ 210          {                        
+ 211   1          u8 t;
+ 212   1      //    IIC_SCL=0;  // 起始信号后时钟线已经被拉低了
+ 213   1          for(t=0;t<8;t++)
+ 214   1          {              
+ 215   2              IIC_SDA=(txd&0x80);
+ 216   2              txd<<=1;
+ 217   2                      SCL_Clr();
+ 218   2                      NOP4();         // 实际上延时了1.67us
+ 219   2                      SCL_Set();
+ 220   2          }
+ 221   1      }
+ 222          
+ 223          // IIC读一字节
+ 224          static u8 IIC_Read_Byte(unsigned char ack)
+ 225          {
+ 226   1              unsigned char i,receive=0;
+ 227   1              SDA_IN();
+ 228   1          for(i=0;i<8;i++ )
+ 229   1              {
+ 230   2              SCL_Set();
+ 231   2                      delay_1_us(3);          // 需要延时2us，实际上延时了2.5us
+ 232   2                      SCL_Clr();
+ 233   2              receive<<=1;
+ 234   2              if(READ_SDA)receive++;   
+ 235   2                      delay_1_us(2);  // 需要延时1us，实际上延时了1.67us
+ 236   2          }                                    
+ 237   1          if (!ack)
+ 238   1              IIC_NAck();
+ 239   1          else
+C51 COMPILER V9.54   IIC                                                                   07/26/2022 01:51:33 PAGE 5   
+
+ 240   1              IIC_Ack();
+ 241   1          return receive;
+ 242   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    572    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----      25
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
