@@ -4,7 +4,7 @@
 
 # OLED-IIC-STC8H8K64U #
 
-适用于STC8系列单片机，不过只测试过STC8H8K64U，IRC频率为24MHz。
+适用于STC8系列单片机，不过只测试过STC8H8K64U，IRC频率为11.0592MHz、24MHz、48MHz。
 
 # OLED-IIC-32 #
 
