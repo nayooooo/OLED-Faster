@@ -1,11 +1,11 @@
-C51 COMPILER V9.54   SCREEN                                                                07/26/2022 01:51:33 PAGE 1   
+C51 COMPILER V9.54   SCREEN                                                                07/26/2022 21:10:29 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE SCREEN
 OBJECT MODULE PLACED IN ..\Obj\screen.obj
 COMPILER INVOKED BY: D:\keil 5 - C51\C51\BIN\C51.EXE ..\Hardware\OLED\screen.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\
-                    -Fwlib;..\Hardware\LED;..\Hardware\OLED;..\Software\IIC;..\User) DEBUG OBJECTEXTEND PRINT(.\Listings\screen.lst) OBJECT(.
-                    -.\Obj\screen.obj)
+                    -Fwlib;..\Hardware\LED;..\Hardware\OLED;..\Software\IIC;..\User;..\System\MyTimer) DEBUG OBJECTEXTEND PRINT(.\Listings\sc
+                    -reen.lst) OBJECT(..\Obj\screen.obj)
 
 line level    source
 
@@ -16,16 +16,22 @@ line level    source
    5          
    6          #include "delay.h"
    7          
-   8          void OLED_Test(u32 nums)
-   9          {
-  10   1              OLED_ShowNums(0, 0, nums, 16, FILL);
-  11   1      }
+   8          u8 OLED_Event_Flag = OLED_No_Event;
+   9          
+  10          u32 frame = 0;
+  11          u32 f_OLED;  // OLEDµÄÆµÂÊ
+  12          
+  13          void OLED_Mes_Type(void)
+  14          {
+  15   1              OLED_ShowString(0, 0, (u8*)"frame:", 16, FILL);
+  16   1              OLED_ShowString(0, 16, (u8*)"f:0  Hz", 16, FILL);
+  17   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =     42    ----
-   CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =   ----       4
+   CODE SIZE        =     45    ----
+   CONSTANT SIZE    =     15    ----
+   XDATA SIZE       =      9    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----

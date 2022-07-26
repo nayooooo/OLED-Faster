@@ -1,5 +1,7 @@
 "..\Obj\delay.obj",
 "..\Obj\GPIO.obj",
+"..\Obj\timer.obj",
+"..\Obj\MyTimer.obj",
 "..\Obj\main.obj",
 "..\Obj\led.obj",
 "..\Obj\screen.obj",

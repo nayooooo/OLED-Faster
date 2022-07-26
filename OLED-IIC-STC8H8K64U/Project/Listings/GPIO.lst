@@ -1,11 +1,11 @@
-C51 COMPILER V9.54   GPIO                                                                  07/26/2022 01:51:32 PAGE 1   
+C51 COMPILER V9.54   GPIO                                                                  07/26/2022 21:10:29 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE GPIO
 OBJECT MODULE PLACED IN ..\Obj\GPIO.obj
 COMPILER INVOKED BY: D:\keil 5 - C51\C51\BIN\C51.EXE ..\Fwlib\GPIO.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Fwlib;..\H
-                    -ardware\LED;..\Hardware\OLED;..\Software\IIC;..\User) DEBUG OBJECTEXTEND PRINT(.\Listings\GPIO.lst) OBJECT(..\Obj\GPIO.o
-                    -bj)
+                    -ardware\LED;..\Hardware\OLED;..\Software\IIC;..\User;..\System\MyTimer) DEBUG OBJECTEXTEND PRINT(.\Listings\GPIO.lst) OB
+                    -JECT(..\Obj\GPIO.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   51   2                      if(GPIOx->Mode == GPIO_OUT_PP)          P2M1 &= ~GPIOx->Pin,    P2M0 |=  GPIOx->Pin;     //推挽输出
   52   2              }
   53   1              if(GPIO == GPIO_P3)
-C51 COMPILER V9.54   GPIO                                                                  07/26/2022 01:51:32 PAGE 2   
+C51 COMPILER V9.54   GPIO                                                                  07/26/2022 21:10:29 PAGE 2   
 
   54   1              {
   55   2                      if(GPIOx->Mode == GPIO_PullUp)          P3M1 &= ~GPIOx->Pin,    P3M0 &= ~GPIOx->Pin;     //上拉准双向口

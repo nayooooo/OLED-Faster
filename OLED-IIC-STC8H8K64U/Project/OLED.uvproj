@@ -324,7 +324,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\Fwlib;..\Hardware\LED;..\Hardware\OLED;..\Software\IIC;..\User</IncludePath>
+              <IncludePath>..\Fwlib;..\Hardware\LED;..\Hardware\OLED;..\Software\IIC;..\User;..\System\MyTimer</IncludePath>
             </VariousControls>
           </C51>
           <Ax51>
@@ -386,10 +386,22 @@
               <FileType>1</FileType>
               <FilePath>..\Fwlib\GPIO.c</FilePath>
             </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Fwlib\timer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>SYSTEM</GroupName>
+          <Files>
+            <File>
+              <FileName>MyTimer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\System\MyTimer\MyTimer.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>USER</GroupName>
