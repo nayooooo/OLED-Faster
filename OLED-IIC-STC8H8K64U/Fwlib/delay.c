@@ -10,7 +10,10 @@ void Delay15us(void)		//@24.000MHz
 
 /*------------- 自适应延时函数 -------------*/
 
-void delay_1_us(u16 us)		//@24.00MHz下，实际上延时2/2.4us
+// @24.00MHz下
+// us=1->1.458us
+// us=2->2.708us
+void delay_1_us(u16 us)
 {
 	u16 i;
 	do{

@@ -146,21 +146,20 @@ static void IIC_Start(void)
 {
 	SDA_Clr();
 	SCL_Clr();
-	delay_5_us(1);
+ 	NOP1();		// 适当延时，实际上延时了0.083us
  	SDA_Set();
-	delay_5_us(1);
+ 	NOP1();		// 需要延时0.6us，实际上延时了0.085us
 	SCL_Set();
-}	  
+}
 
 // IIC停止信号
 static void IIC_Stop(void)
 {
-	SCL_Set();
 	SDA_Set();
 	SCL_Clr();
- 	NOP2();		// 需要延时0.6us，实际上延时了0.83us
+ 	NOP1();			// 需要延时0.6us，实际上延时了0.083us
 	SDA_Clr();
- 	NOP4();		// 需要延时1.3us，实际上延时了1.67us
+ 	delay_1_us(2);	// 需要延时1.3us，实际上延时了1.67us，参数为1时无法驱动
 }
 
 // IIC等待应答
@@ -169,7 +168,7 @@ static u8 IIC_Wait_Ack(void)
 	u8 ucErrTime=0;
 	SDA_IN();      // SDA输入
 	SCL_Clr();
-	NOP1();	// 需要延时us，实际上延时了0.42us
+ 	NOP1();	// 需要延时0.6us，实际上延时了0.083us
 	while(READ_SDA)
 	{
 		ucErrTime++;
@@ -181,62 +180,19 @@ static u8 IIC_Wait_Ack(void)
 	}
 	SCL_Set();
 	return 0;  
-} 
-
-// IIC应答
-static void IIC_Ack(void)
-{
-	SCL_Set();
-	SDA_Set();
-	delay_1_us(3);		// 需要延时2us，实际上延时了2.5us
-	SCL_Clr();
-	delay_1_us(3);		// 需要延时2us，实际上延时了2.5us
-	SCL_Set();
-}
-
-// IIC不应答
-static void IIC_NAck(void)
-{
-	SCL_Set();
-	SDA_Clr();
-	delay_1_us(3);		// 需要延时2us，实际上延时了2.5us
-	SCL_Clr();
-	delay_1_us(3);		// 需要延时2us，实际上延时了2.5us
-	SCL_Set();
 }
 
 // IIC发送一字节
 static void IIC_Send_Byte(u8 txd)
 {                        
     u8 t;
-//    IIC_SCL=0;  // 起始信号后时钟线已经被拉低了
+//    SCL_Set();  // 起始信号后时钟线已经被拉低了
     for(t=0;t<8;t++)
-    {              
+    {
         IIC_SDA=(txd&0x80);
         txd<<=1;
 		SCL_Clr();
-		NOP4();		// 实际上延时了1.67us
+		NOP4();	// 需要延时2.5us，实际上延时了0.332us
 		SCL_Set();
     }
-}
-
-// IIC读一字节
-static u8 IIC_Read_Byte(unsigned char ack)
-{
-	unsigned char i,receive=0;
-	SDA_IN();
-    for(i=0;i<8;i++ )
-	{
-        SCL_Set();
-		delay_1_us(3);		// 需要延时2us，实际上延时了2.5us
-		SCL_Clr();
-        receive<<=1;
-        if(READ_SDA)receive++;   
-		delay_1_us(2);	// 需要延时1us，实际上延时了1.67us
-    }					 
-    if (!ack)
-        IIC_NAck();
-    else
-        IIC_Ack();
-    return receive;
 }

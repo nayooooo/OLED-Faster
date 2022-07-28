@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:52:24 PAGE 1   
+C51 COMPILER V9.54   IIC                                                                   07/29/2022 00:48:52 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE IIC
@@ -62,7 +62,7 @@ line level    source
   51          {
   52   1              IIC_Start();
   53   1              IIC_Send_Byte(SLAVE_ADDRESS);            // Slave address
-C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:52:24 PAGE 2   
+C51 COMPILER V9.54   IIC                                                                   07/29/2022 00:48:52 PAGE 2   
 
   54   1              IIC_Wait_Ack();
   55   1              IIC_Send_Byte(OLED_DATA_CHR);
@@ -126,7 +126,7 @@ line level    source
  113   1              IIC_Wait_Ack();
  114   1              while(size--){
  115   2                      IIC_Send_Byte(*Dat_Buf);
-C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:52:24 PAGE 3   
+C51 COMPILER V9.54   IIC                                                                   07/29/2022 00:48:52 PAGE 3   
 
  116   2                      IIC_Wait_Ack();
  117   2                      Dat_Buf++;
@@ -161,110 +161,64 @@ line level    source
  146          {
  147   1              SDA_Clr();
  148   1              SCL_Clr();
- 149   1              delay_5_us(1);
+ 149   1              NOP1();         // 适当延时，实际上延时了0.083us
  150   1              SDA_Set();
- 151   1              delay_5_us(1);
+ 151   1              NOP1();         // 需要延时0.6us，实际上延时了0.085us
  152   1              SCL_Set();
- 153   1      }         
+ 153   1      }
  154          
  155          // IIC停止信号
  156          static void IIC_Stop(void)
  157          {
- 158   1              SCL_Set();
- 159   1              SDA_Set();
- 160   1              SCL_Clr();
- 161   1              NOP2();         // 需要延时0.6us，实际上延时了0.83us
- 162   1              SDA_Clr();
- 163   1              NOP4();         // 需要延时1.3us，实际上延时了1.67us
- 164   1      }
- 165          
- 166          // IIC等待应答
- 167          static u8 IIC_Wait_Ack(void)
- 168          {
- 169   1              u8 ucErrTime=0;
- 170   1              SDA_IN();      // SDA输入
- 171   1              SCL_Clr();
- 172   1              NOP1(); // 需要延时us，实际上延时了0.42us
- 173   1              while(READ_SDA)
- 174   1              {
- 175   2                      ucErrTime++;
- 176   2                      if(ucErrTime>250)
- 177   2                      {
-C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:52:24 PAGE 4   
+ 158   1              SDA_Set();
+ 159   1              SCL_Clr();
+ 160   1              NOP1();                 // 需要延时0.6us，实际上延时了0.083us
+ 161   1              SDA_Clr();
+ 162   1              delay_1_us(2);  // 需要延时1.3us，实际上延时了1.67us，参数为1时无法驱动
+ 163   1      }
+ 164          
+ 165          // IIC等待应答
+ 166          static u8 IIC_Wait_Ack(void)
+ 167          {
+ 168   1              u8 ucErrTime=0;
+ 169   1              SDA_IN();      // SDA输入
+ 170   1              SCL_Clr();
+ 171   1              NOP1(); // 需要延时0.6us，实际上延时了0.083us
+ 172   1              while(READ_SDA)
+ 173   1              {
+ 174   2                      ucErrTime++;
+ 175   2                      if(ucErrTime>250)
+ 176   2                      {
+ 177   3                              IIC_Stop();
+C51 COMPILER V9.54   IIC                                                                   07/29/2022 00:48:52 PAGE 4   
 
- 178   3                              IIC_Stop();
- 179   3                              return 1;
- 180   3                      }
- 181   2              }
- 182   1              SCL_Set();
- 183   1              return 0;  
- 184   1      } 
- 185          
- 186          // IIC应答
- 187          static void IIC_Ack(void)
- 188          {
- 189   1              SCL_Set();
- 190   1              SDA_Set();
- 191   1              delay_1_us(3);          // 需要延时2us，实际上延时了2.5us
- 192   1              SCL_Clr();
- 193   1              delay_1_us(3);          // 需要延时2us，实际上延时了2.5us
- 194   1              SCL_Set();
- 195   1      }
- 196          
- 197          // IIC不应答
- 198          static void IIC_NAck(void)
- 199          {
- 200   1              SCL_Set();
- 201   1              SDA_Clr();
- 202   1              delay_1_us(3);          // 需要延时2us，实际上延时了2.5us
- 203   1              SCL_Clr();
- 204   1              delay_1_us(3);          // 需要延时2us，实际上延时了2.5us
- 205   1              SCL_Set();
- 206   1      }
- 207          
- 208          // IIC发送一字节
- 209          static void IIC_Send_Byte(u8 txd)
- 210          {                        
- 211   1          u8 t;
- 212   1      //    IIC_SCL=0;  // 起始信号后时钟线已经被拉低了
- 213   1          for(t=0;t<8;t++)
- 214   1          {              
- 215   2              IIC_SDA=(txd&0x80);
- 216   2              txd<<=1;
- 217   2                      SCL_Clr();
- 218   2                      NOP4();         // 实际上延时了1.67us
- 219   2                      SCL_Set();
- 220   2          }
- 221   1      }
- 222          
- 223          // IIC读一字节
- 224          static u8 IIC_Read_Byte(unsigned char ack)
- 225          {
- 226   1              unsigned char i,receive=0;
- 227   1              SDA_IN();
- 228   1          for(i=0;i<8;i++ )
- 229   1              {
- 230   2              SCL_Set();
- 231   2                      delay_1_us(3);          // 需要延时2us，实际上延时了2.5us
- 232   2                      SCL_Clr();
- 233   2              receive<<=1;
- 234   2              if(READ_SDA)receive++;   
- 235   2                      delay_1_us(2);  // 需要延时1us，实际上延时了1.67us
- 236   2          }                                    
- 237   1          if (!ack)
- 238   1              IIC_NAck();
- 239   1          else
-C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:52:24 PAGE 5   
-
- 240   1              IIC_Ack();
- 241   1          return receive;
- 242   1      }
+ 178   3                              return 1;
+ 179   3                      }
+ 180   2              }
+ 181   1              SCL_Set();
+ 182   1              return 0;  
+ 183   1      }
+ 184          
+ 185          // IIC发送一字节
+ 186          static void IIC_Send_Byte(u8 txd)
+ 187          {                        
+ 188   1          u8 t;
+ 189   1      //    SCL_Set();  // 起始信号后时钟线已经被拉低了
+ 190   1          for(t=0;t<8;t++)
+ 191   1          {
+ 192   2              IIC_SDA=(txd&0x80);
+ 193   2              txd<<=1;
+ 194   2                      SCL_Clr();
+ 195   2                      NOP4(); // 需要延时2.5us，实际上延时了0.332us
+ 196   2                      SCL_Set();
+ 197   2          }
+ 198   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    572    ----
+   CODE SIZE        =    434    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =   ----      25
+   XDATA SIZE       =   ----      22
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----

@@ -35,10 +35,7 @@
 static void IIC_Start(void);					// IIC起始信号
 static void IIC_Stop(void);						// IIC停止信号
 static void IIC_Send_Byte(u8 txd);				// IIC发送一字节
-static u8 IIC_Read_Byte(unsigned char ack);		// IIC读取一字节
 static u8 IIC_Wait_Ack(void);					// IIC等待应答
-static void IIC_Ack(void);						// IIC应答
-static void IIC_NAck(void);						// IIC不应答
 
 void IIC_GPIO_Config(void);						// 配置IIC接口
 
