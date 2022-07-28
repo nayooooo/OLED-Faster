@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:41:02 PAGE 1   
+C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:52:24 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE IIC
@@ -62,7 +62,7 @@ line level    source
   51          {
   52   1              IIC_Start();
   53   1              IIC_Send_Byte(SLAVE_ADDRESS);            // Slave address
-C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:41:02 PAGE 2   
+C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:52:24 PAGE 2   
 
   54   1              IIC_Wait_Ack();
   55   1              IIC_Send_Byte(OLED_DATA_CHR);
@@ -126,7 +126,7 @@ line level    source
  113   1              IIC_Wait_Ack();
  114   1              while(size--){
  115   2                      IIC_Send_Byte(*Dat_Buf);
-C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:41:02 PAGE 3   
+C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:52:24 PAGE 3   
 
  116   2                      IIC_Wait_Ack();
  117   2                      Dat_Buf++;
@@ -190,7 +190,7 @@ line level    source
  175   2                      ucErrTime++;
  176   2                      if(ucErrTime>250)
  177   2                      {
-C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:41:02 PAGE 4   
+C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:52:24 PAGE 4   
 
  178   3                              IIC_Stop();
  179   3                              return 1;
@@ -254,7 +254,7 @@ line level    source
  237   1          if (!ack)
  238   1              IIC_NAck();
  239   1          else
-C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:41:02 PAGE 5   
+C51 COMPILER V9.54   IIC                                                                   07/28/2022 21:52:24 PAGE 5   
 
  240   1              IIC_Ack();
  241   1          return receive;

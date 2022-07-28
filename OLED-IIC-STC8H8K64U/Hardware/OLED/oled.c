@@ -31,7 +31,7 @@ u32 mypow(u8 m,u8 n)
 
 /* IIC读写函数 -------------------------------------*/
 /* 慢速读写 ----------------------------------------*/
-//向SSD1106写入一个字节。
+//向SSD1306写入一个字节。
 //dat:要写入的数据/命令
 //cmd:数据/命令标志 0,表示命令;1,表示数据;
 static void OLED_WR_Byte(u8 dat,u8 cmd)
@@ -39,21 +39,21 @@ static void OLED_WR_Byte(u8 dat,u8 cmd)
 	IIC_WR_Byte(dat, cmd);
 }
 
-//向SSD1106写入一个字节数据。
+//向SSD1306写入一个字节数据。
 //dat:要写入的数据
 static void OLED_WR_Byte_Dat(u8 dat)
 {
 	IIC_WR_Byte_Dat(dat);
 }
 
-//向SSD1106写入一个字节命令。
+//向SSD1306写入一个字节命令。
 //cmd:要写入的命令
 static void OLED_WR_Byte_Cmd(u8 cmd)
 {
 	IIC_WR_Byte_Cmd(cmd);
 }
 /* 快速读写 ----------------------------------------*/
-//向SSD1106写入一个字节。
+//向SSD1306写入一个字节。
 //dat:要写入的数据/命令
 //cmd:数据/命令标志 0,表示命令;1,表示数据;
 static void OLED_WR_Byte_Fast(u8 *buf, u16 size, u8 cmd)
@@ -61,14 +61,14 @@ static void OLED_WR_Byte_Fast(u8 *buf, u16 size, u8 cmd)
 	IIC_WR_Byte_Fast(buf, size, cmd);
 }
 
-//向SSD1106写入一个字节数据。
+//向SSD1306写入一个字节数据。
 //dat:要写入的数据
 static void OLED_WR_Byte_Dat_Fast(u8 *Dat_Buf, u16 size)
 {
 	IIC_WR_Byte_Dat_Fast(Dat_Buf, size);
 }
 
-//向SSD1106写入一个字节命令。
+//向SSD1306写入一个字节命令。
 //cmd:要写入的命令
 static void OLED_WR_Byte_Cmd_Fast(u8 *Cmd_Buf, u16 size)
 {

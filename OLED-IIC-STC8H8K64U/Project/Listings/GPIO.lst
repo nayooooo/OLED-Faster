@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   GPIO                                                                  07/28/2022 21:41:01 PAGE 1   
+C51 COMPILER V9.54   GPIO                                                                  07/28/2022 21:52:23 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE GPIO
@@ -62,7 +62,7 @@ line level    source
   51   2                      if(GPIOx->Mode == GPIO_OUT_PP)          P2M1 &= ~GPIOx->Pin,    P2M0 |=  GPIOx->Pin;     //推挽输出
   52   2              }
   53   1              if(GPIO == GPIO_P3)
-C51 COMPILER V9.54   GPIO                                                                  07/28/2022 21:41:01 PAGE 2   
+C51 COMPILER V9.54   GPIO                                                                  07/28/2022 21:52:23 PAGE 2   
 
   54   1              {
   55   2                      if(GPIOx->Mode == GPIO_PullUp)          P3M1 &= ~GPIOx->Pin,    P3M0 &= ~GPIOx->Pin;     //上拉准双向口
