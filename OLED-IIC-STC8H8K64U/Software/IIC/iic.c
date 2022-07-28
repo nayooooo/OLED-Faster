@@ -179,7 +179,7 @@ static u8 IIC_Wait_Ack(void)
 		}
 	}
 	SCL_Set();
-	return 0;  
+	return 0;
 }
 
 // IIC发送一字节

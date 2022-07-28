@@ -383,6 +383,22 @@ void OLED_ShowNums(u8 x,u8 y,u32 nums,u8 size,u8 mode)
 	OLED_ShowNum(x, y, nums, digit, size, mode);
 }
 
+//OLED显示小数
+void OLED_ShowDecimal(u8 x, u8 y, u32 Int_Part, u8 Dec_Part, u8 size, u8 mode)
+{
+	u8 digital = 0;
+	u8 temp = Int_Part;
+	
+	do{
+		temp /= 10;
+		digital++;
+	}while(temp);
+	
+	OLED_ShowNums(x, y, Int_Part, size, mode);
+	OLED_ShowChar(x+digital*(size/2), y, '.', size, mode);
+	OLED_ShowNums(x+(digital+1)*(size/2), y, Dec_Part, size, mode);
+}
+
 //OLED显示字符串
 void OLED_ShowString(u8 x,u8 y,const u8 *p,u8 size,u8 mode)
 {	
@@ -432,7 +448,7 @@ void OLED_Init(void)
 	OLED_WR_Byte_Cmd(0x81);
 	OLED_WR_Byte_Cmd(0xEF);
 	OLED_WR_Byte_Cmd(0xD9);
-	OLED_WR_Byte_Cmd(0xf1);
+	OLED_WR_Byte_Cmd(0xF1);
 	OLED_WR_Byte_Cmd(0xDB);
 	OLED_WR_Byte_Cmd(0x30);
 
