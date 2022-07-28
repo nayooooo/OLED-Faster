@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   TIMER                                                                 07/26/2022 21:10:29 PAGE 1   
+C51 COMPILER V9.54   TIMER                                                                 07/28/2022 21:41:01 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE TIMER
@@ -62,7 +62,7 @@ line level    source
   51          // 版本: V1.0, 2012-10-22
   52          //========================================================================
   53          u8      Timer_Inilize(u8 TIM, TIM_InitTypeDef *TIMx)
-C51 COMPILER V9.54   TIMER                                                                 07/26/2022 21:10:29 PAGE 2   
+C51 COMPILER V9.54   TIMER                                                                 07/28/2022 21:41:01 PAGE 2   
 
   54          {
   55   1              if(TIM > Timer4)        return 1;       //空操作
@@ -126,7 +126,7 @@ line level    source
  109   2                      else            Timer2_AsTimer();               //定时
  110   2                      if(TIMx->TIM_ClkOut == ENABLE)  Timer2_CLKO_Enable();           //输出时钟
  111   2                      else            Timer2_CLKO_Disable();  //不输出时钟
-C51 COMPILER V9.54   TIMER                                                                 07/26/2022 21:10:29 PAGE 3   
+C51 COMPILER V9.54   TIMER                                                                 07/28/2022 21:41:01 PAGE 3   
 
  112   2      
  113   2                      T2_Load(TIMx->TIM_Value);

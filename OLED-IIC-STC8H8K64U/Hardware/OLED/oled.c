@@ -410,35 +410,35 @@ void OLED_Init(void)
 {
 	OLED_GPIO_Init();
 					  
-	OLED_WR_Byte(0xAE,OLED_CMD);
-	OLED_WR_Byte(0xD5,OLED_CMD);
-	OLED_WR_Byte(80,OLED_CMD);  
-	OLED_WR_Byte(0xA8,OLED_CMD);
-	OLED_WR_Byte(0X3F,OLED_CMD);
-	OLED_WR_Byte(0xD3,OLED_CMD);
-	OLED_WR_Byte(0X00,OLED_CMD);
+	OLED_WR_Byte_Cmd(0xAE);
+	OLED_WR_Byte_Cmd(0xD5);
+	OLED_WR_Byte_Cmd(0x80);  
+	OLED_WR_Byte_Cmd(0xA8);
+	OLED_WR_Byte_Cmd(0X3F);
+	OLED_WR_Byte_Cmd(0xD3);
+	OLED_WR_Byte_Cmd(0X00);
 
-	OLED_WR_Byte(0x40,OLED_CMD);
+	OLED_WR_Byte_Cmd(0x40);
 								
-	OLED_WR_Byte(0x8D,OLED_CMD);
-	OLED_WR_Byte(0x14,OLED_CMD);
-	OLED_WR_Byte(0x20,OLED_CMD);
-	OLED_WR_Byte(0x01,OLED_CMD);		// 垂直地址模式
-	OLED_WR_Byte(0xA1,OLED_CMD);
-	OLED_WR_Byte(0xC0,OLED_CMD);
-	OLED_WR_Byte(0xDA,OLED_CMD);
-	OLED_WR_Byte(0x12,OLED_CMD);
+	OLED_WR_Byte_Cmd(0x8D);
+	OLED_WR_Byte_Cmd(0x14);
+	OLED_WR_Byte_Cmd(0x20);
+	OLED_WR_Byte_Cmd(0x01);		// 垂直地址模式
+	OLED_WR_Byte_Cmd(0xA1);
+	OLED_WR_Byte_Cmd(0xC0);
+	OLED_WR_Byte_Cmd(0xDA);
+	OLED_WR_Byte_Cmd(0x12);
 		 
-	OLED_WR_Byte(0x81,OLED_CMD);
-	OLED_WR_Byte(0xEF,OLED_CMD);
-	OLED_WR_Byte(0xD9,OLED_CMD);
-	OLED_WR_Byte(0xf1,OLED_CMD);
-	OLED_WR_Byte(0xDB,OLED_CMD);
-	OLED_WR_Byte(0x30,OLED_CMD);
+	OLED_WR_Byte_Cmd(0x81);
+	OLED_WR_Byte_Cmd(0xEF);
+	OLED_WR_Byte_Cmd(0xD9);
+	OLED_WR_Byte_Cmd(0xf1);
+	OLED_WR_Byte_Cmd(0xDB);
+	OLED_WR_Byte_Cmd(0x30);
 
-	OLED_WR_Byte(0xA4,OLED_CMD);
-	OLED_WR_Byte(0xA6,OLED_CMD);
-	OLED_WR_Byte(0xAF,OLED_CMD);
+	OLED_WR_Byte_Cmd(0xA4);
+	OLED_WR_Byte_Cmd(0xA6);
+	OLED_WR_Byte_Cmd(0xAF);
 	
 	OLED_Clear();
 }

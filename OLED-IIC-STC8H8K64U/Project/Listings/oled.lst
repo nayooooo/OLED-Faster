@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   OLED                                                                  07/26/2022 21:10:29 PAGE 1   
+C51 COMPILER V9.54   OLED                                                                  07/28/2022 21:41:01 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE OLED
@@ -62,7 +62,7 @@ line level    source
   51          static void OLED_WR_Byte_Cmd(u8 cmd)
   52          {
   53   1              IIC_WR_Byte_Cmd(cmd);
-C51 COMPILER V9.54   OLED                                                                  07/26/2022 21:10:29 PAGE 2   
+C51 COMPILER V9.54   OLED                                                                  07/28/2022 21:41:01 PAGE 2   
 
   54   1      }
   55          /* 快速读写 ----------------------------------------*/
@@ -126,7 +126,7 @@ line level    source
  113          {
  114   1              u8 pos,bx,temp=0;
  115   1              if(x>OLED_COL_MAX-1||y>OLED_ROW_MAX-1)return;
-C51 COMPILER V9.54   OLED                                                                  07/26/2022 21:10:29 PAGE 3   
+C51 COMPILER V9.54   OLED                                                                  07/28/2022 21:41:01 PAGE 3   
 
  116   1              pos=7-y/8;
  117   1              bx=y%8;
@@ -190,7 +190,7 @@ line level    source
  174   3                              y1 ^= y2; y2 ^= y1; y1 ^= y2;
  175   3                      }
  176   2                      else if(dx<0 && dy >0)          //处理第四象限
-C51 COMPILER V9.54   OLED                                                                  07/26/2022 21:10:29 PAGE 4   
+C51 COMPILER V9.54   OLED                                                                  07/28/2022 21:41:01 PAGE 4   
 
  177   2                      {
  178   3                              Point_Position_Inverse_Flag |= 0X08;
@@ -254,7 +254,7 @@ line level    source
                       u32 t; 
                       int xerr=0, yerr=0, delta_x, delta_y, distance; 
                       int incx, incy, uRow, uCol; 
-C51 COMPILER V9.54   OLED                                                                  07/26/2022 21:10:29 PAGE 5   
+C51 COMPILER V9.54   OLED                                                                  07/28/2022 21:41:01 PAGE 5   
 
                       delta_x = x2-x1;
                       delta_y = y2-y1; 
@@ -318,7 +318,7 @@ line level    source
  298   3                              temp&0X80 ? OLED_DrawPoint(u_x,u_y,mode) : OLED_DrawPoint(u_x,u_y,!mode);
  299   3                              temp <<= 1;
  300   3                              u_y++;
-C51 COMPILER V9.54   OLED                                                                  07/26/2022 21:10:29 PAGE 6   
+C51 COMPILER V9.54   OLED                                                                  07/28/2022 21:41:01 PAGE 6   
 
  301   3                              if((u_y-y)==height)
  302   3                              {
@@ -382,7 +382,7 @@ line level    source
  360   2                      if(enshow==0&&t<(len-1))
  361   2                      {
  362   3                              if(temp==0)
-C51 COMPILER V9.54   OLED                                                                  07/26/2022 21:10:29 PAGE 7   
+C51 COMPILER V9.54   OLED                                                                  07/28/2022 21:41:01 PAGE 7   
 
  363   3                              {
  364   4                                      OLED_ShowChar(x+(size/2)*t,y,' ',size,mode);
@@ -434,37 +434,37 @@ line level    source
  410          {
  411   1              OLED_GPIO_Init();
  412   1                                                
- 413   1              OLED_WR_Byte(0xAE,OLED_CMD);
- 414   1              OLED_WR_Byte(0xD5,OLED_CMD);
- 415   1              OLED_WR_Byte(80,OLED_CMD);  
- 416   1              OLED_WR_Byte(0xA8,OLED_CMD);
- 417   1              OLED_WR_Byte(0X3F,OLED_CMD);
- 418   1              OLED_WR_Byte(0xD3,OLED_CMD);
- 419   1              OLED_WR_Byte(0X00,OLED_CMD);
+ 413   1              OLED_WR_Byte_Cmd(0xAE);
+ 414   1              OLED_WR_Byte_Cmd(0xD5);
+ 415   1              OLED_WR_Byte_Cmd(0x80);  
+ 416   1              OLED_WR_Byte_Cmd(0xA8);
+ 417   1              OLED_WR_Byte_Cmd(0X3F);
+ 418   1              OLED_WR_Byte_Cmd(0xD3);
+ 419   1              OLED_WR_Byte_Cmd(0X00);
  420   1      
- 421   1              OLED_WR_Byte(0x40,OLED_CMD);
+ 421   1              OLED_WR_Byte_Cmd(0x40);
  422   1                                                                      
- 423   1              OLED_WR_Byte(0x8D,OLED_CMD);
- 424   1              OLED_WR_Byte(0x14,OLED_CMD);
-C51 COMPILER V9.54   OLED                                                                  07/26/2022 21:10:29 PAGE 8   
+ 423   1              OLED_WR_Byte_Cmd(0x8D);
+ 424   1              OLED_WR_Byte_Cmd(0x14);
+C51 COMPILER V9.54   OLED                                                                  07/28/2022 21:41:01 PAGE 8   
 
- 425   1              OLED_WR_Byte(0x20,OLED_CMD);
- 426   1              OLED_WR_Byte(0x01,OLED_CMD);            // 垂直地址模式
- 427   1              OLED_WR_Byte(0xA1,OLED_CMD);
- 428   1              OLED_WR_Byte(0xC0,OLED_CMD);
- 429   1              OLED_WR_Byte(0xDA,OLED_CMD);
- 430   1              OLED_WR_Byte(0x12,OLED_CMD);
+ 425   1              OLED_WR_Byte_Cmd(0x20);
+ 426   1              OLED_WR_Byte_Cmd(0x01);         // 垂直地址模式
+ 427   1              OLED_WR_Byte_Cmd(0xA1);
+ 428   1              OLED_WR_Byte_Cmd(0xC0);
+ 429   1              OLED_WR_Byte_Cmd(0xDA);
+ 430   1              OLED_WR_Byte_Cmd(0x12);
  431   1                       
- 432   1              OLED_WR_Byte(0x81,OLED_CMD);
- 433   1              OLED_WR_Byte(0xEF,OLED_CMD);
- 434   1              OLED_WR_Byte(0xD9,OLED_CMD);
- 435   1              OLED_WR_Byte(0xf1,OLED_CMD);
- 436   1              OLED_WR_Byte(0xDB,OLED_CMD);
- 437   1              OLED_WR_Byte(0x30,OLED_CMD);
+ 432   1              OLED_WR_Byte_Cmd(0x81);
+ 433   1              OLED_WR_Byte_Cmd(0xEF);
+ 434   1              OLED_WR_Byte_Cmd(0xD9);
+ 435   1              OLED_WR_Byte_Cmd(0xf1);
+ 436   1              OLED_WR_Byte_Cmd(0xDB);
+ 437   1              OLED_WR_Byte_Cmd(0x30);
  438   1      
- 439   1              OLED_WR_Byte(0xA4,OLED_CMD);
- 440   1              OLED_WR_Byte(0xA6,OLED_CMD);
- 441   1              OLED_WR_Byte(0xAF,OLED_CMD);
+ 439   1              OLED_WR_Byte_Cmd(0xA4);
+ 440   1              OLED_WR_Byte_Cmd(0xA6);
+ 441   1              OLED_WR_Byte_Cmd(0xAF);
  442   1              
  443   1              OLED_Clear();
  444   1      }
@@ -473,7 +473,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   2816    ----
+   CODE SIZE        =   2775    ----
    CONSTANT SIZE    =   6084    ----
    XDATA SIZE       =   1024      97
    PDATA SIZE       =   ----    ----
