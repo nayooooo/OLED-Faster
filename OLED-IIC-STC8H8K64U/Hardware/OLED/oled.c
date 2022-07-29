@@ -428,7 +428,7 @@ void OLED_Init(void)
 					  
 	OLED_WR_Byte_Cmd(0xAE);
 	OLED_WR_Byte_Cmd(0xD5);
-	OLED_WR_Byte_Cmd(0x80);  
+	OLED_WR_Byte_Cmd(80);  
 	OLED_WR_Byte_Cmd(0xA8);
 	OLED_WR_Byte_Cmd(0X3F);
 	OLED_WR_Byte_Cmd(0xD3);
