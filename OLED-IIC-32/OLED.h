@@ -1,15 +1,9 @@
-/******************************************************************************
-	说明: 
-	----------------------------------------------------------------
-	GND    电源地
-	VCC  接5V或3.3v电源
-	D0   接PA5（SCL）
-	D1   接PA7（SDA）
-	RES  接PB0
-	DC   接PB1
-	CS   接PA4               
-	----------------------------------------------------------------
-******************************************************************************/
+/**********************************************
+//		GND -> GND
+//		VCC -> VCC
+//		SCL -> GPIOB6
+//		SDA -> GPIOB7
+**********************************************/
 #ifndef __OLED_H
 #define __OLED_H			  	 
 #include "sys.h"
@@ -20,6 +14,7 @@
 #define OLED_COL_MAX (128)
 #define OLED_ROW_MAX (64)
 #define OLED_PAGE_MAX (OLED_ROW_MAX/8)
+#define OLED_GRAM_SIZE (OLED_COL_MAX*OLED_PAGE_MAX)
 #define OLED_ROW_COL_MAX ((OLED_COL_MAX>OLED_ROW_MAX)?(OLED_COL_MAX):(OLED_ROW_MAX))
 #define OLED_ROW_COL_MIN ((OLED_COL_MAX<OLED_ROW_MAX)?(OLED_COL_MAX):(OLED_ROW_MAX))
 		     
@@ -110,6 +105,11 @@ typedef struct
 //OLED控制用函数
 u32 mypow(u8 m,u8 n);
 static void OLED_WR_Byte(u8 dat,u8 cmd);
+static void OLED_WR_Byte_Dat(u8 dat);
+static void OLED_WR_Byte_Cmd(u8 dat);
+static void OLED_WR_Byte_Fast(u8 *buf, u16 size, u8 cmd);
+static void OLED_WR_Byte_Dat_Fast(u8 *buf, u16 size);
+static void OLED_WR_Byte_Cmd_Fast(u8 *buf, u16 size);
 void OLED_Display_On(void);
 void OLED_Display_Off(void);
 void OLED_Refresh_Gram(void);

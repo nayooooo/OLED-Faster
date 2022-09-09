@@ -1,4 +1,5 @@
 #include "sys.h"
+#include "screen.h"
 #include <stdlib.h>
 #include <math.h>
 
@@ -309,8 +310,8 @@ static bool Judge_Ball_is_Out_of_Bounds(Circle_Dir *c)
 //判断两个圆是否嵌入
 static bool Judge_Two_Balls_is_Embed(Circle_Dir *c1, Circle_Dir *c2)
 {
-	if(fabs(c1->c.x0-c2->c.x0)<c1->c.r+c2->c.r &&\
-		fabs(c1->c.y0-c2->c.y0)<c1->c.r+c2->c.r)
+	if(fabs((double)(c1->c.x0-c2->c.x0))<c1->c.r+c2->c.r &&\
+		fabs((double)(c1->c.y0-c2->c.y0))<c1->c.r+c2->c.r)
 		return true;
 	return false;
 }

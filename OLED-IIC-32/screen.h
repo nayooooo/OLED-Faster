@@ -3,6 +3,8 @@
 
 #include "sys.h"
 
+#include "oled.h"
+
 typedef struct{
 	Circle c;
 	u8 dir;
