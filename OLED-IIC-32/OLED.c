@@ -108,7 +108,7 @@ void OLED_DrawPoint(u8 x,u8 y,u8 mode)
 #endif
 }
 
-//OLEDï¿½ï¿½ï¿½ï¿½
+//OLED¶Áµã
 int8_t OLED_ReadPoint(u8 x,u8 y)
 {
 	u8 pos,bx,temp;
@@ -127,7 +127,7 @@ int8_t OLED_ReadPoint(u8 x,u8 y)
 
 /* ---------------- base graphics ---------------- */
 
-//OLEDï¿½ï¿½ï¿½ï¿½
+//OLED»­Ïß
 void OLED_DrawLine(u8 x1,u8 y1,u8 x2,u8 y2,u8 mode)
 {
 #if OLED_DRAW_LINE_BRESENHAM
@@ -268,7 +268,7 @@ void OLED_DrawLine(u8 x1,u8 y1,u8 x2,u8 y2,u8 mode)
 #endif
 }
 
-//OLEDï¿½Ç¶È»ï¿½ï¿½ï¿½
+//OLED½Ç¶È»­Ïß
 void OLED_DrawLine_Angle(u8 x0, u8 y0, u8 lenght, u16 angle, u8 mode)
 {
 	Point_Signed p;
@@ -281,7 +281,7 @@ void OLED_DrawLine_Angle(u8 x0, u8 y0, u8 lenght, u16 angle, u8 mode)
 	OLED_DrawLine(x0, y0, p.x+x0, p.y+y0, mode);
 }
 
-//OLEDï¿½ï¿½ï¿½ï¿½
+//OLED»­·½
 void OLED_DrawCube(u8 x1,u8 y1,u8 x2,u8 y2, u8 mode)
 {
 	OLED_DrawLine(x1,y1,x2,y1,mode);
@@ -291,7 +291,7 @@ void OLED_DrawCube(u8 x1,u8 y1,u8 x2,u8 y2, u8 mode)
 }
 
 /**
- * @brief OLEDï¿½ï¿½ï¿½ï¿½ä·½
+ * @brief OLED»­Ìî³ä·½
  */
 void OLED_Draw_Filled_Cube(u8 x1,u8 y1,u8 x2,u8 y2, u8 mode)
 {

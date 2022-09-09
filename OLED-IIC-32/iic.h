@@ -23,13 +23,7 @@
 static void IIC_Start(void);
 static void IIC_Stop(void);
 static void IIC_Send_Byte(u8 txd);
-static u8 IIC_Read_Byte(unsigned char ack);
-static u8 IIC_Wait_Ack(void);
-static void IIC_Ack(void);
-static void IIC_NAck(void);
-
-static void IIC_Write_One_Byte(u8 daddr,u8 addr,u8 data);
-static u8 IIC_Read_One_Byte(u8 daddr,u8 addr);	  
+static u8 IIC_Wait_Ack(void);  
 
 void IIC_GPIO_Init(void);
 void IIC_WR_Byte(u8 dat, u8 cmd);
