@@ -124,33 +124,98 @@ void IIC_WR_Byte_Cmd_Fast(u8 *buf, u16 size)
 }
 
 /* IIC协议模块 -------------------------------------*/
+#ifdef FAST_IIC_FOR_SSD1306
+	#define SYSTEM_CORE_CLOCK (72000000)
+	uint8_t	fac_hus=SYSTEM_CORE_CLOCK/1000000/2;  // 半us
+	uint8_t	fac_125ns=SYSTEM_CORE_CLOCK/1000000/8;  // 125ns
+	static void IIC_Fast_Delay_Hus(uint8_t Half_Us)
+	{
+		u32 ticks;
+		u32 told,tnow,tcnt=0;
+		u32 reload=SysTick->LOAD;				//LOAD的值	    	 
+		ticks=Half_Us*fac_hus; 						//需要的节拍数 
+		told=SysTick->VAL;        				//刚进入时的计数器值
+		while(1)
+		{
+			tnow=SysTick->VAL;	
+			if(tnow!=told)
+			{	    
+				if(tnow<told)tcnt+=told-tnow;	//这里注意一下SYSTICK是一个递减的计数器就可以了.
+				else tcnt+=reload-tnow+told;	    
+				told=tnow;
+				if(tcnt>=ticks)break;			//时间超过/等于要延迟的时间,则退出.
+			}  
+		};
+	}
+	static void IIC_Fast_Delay_125ns(uint8_t _125_Ns)
+	{
+		u32 ticks;
+		u32 told,tnow,tcnt=0;
+		u32 reload=SysTick->LOAD;				//LOAD的值	    	 
+		ticks=_125_Ns*fac_125ns; 				//需要的节拍数 
+		told=SysTick->VAL;        				//刚进入时的计数器值
+		while(1)
+		{
+			tnow=SysTick->VAL;	
+			if(tnow!=told)
+			{	    
+				if(tnow<told)tcnt+=told-tnow;	//这里注意一下SYSTICK是一个递减的计数器就可以了.
+				else tcnt+=reload-tnow+told;	    
+				told=tnow;
+				if(tcnt>=ticks)break;			//时间超过/等于要延迟的时间,则退出.
+			}  
+		};
+	}
+#endif /* FAST_IIC_FOR_SSD1306 */
+
 static void IIC_Start(void)
 {
 	SDA_OUT();
-	IIC_SDA=1;	  	  
-	IIC_SCL=1;
-	delay_us(1);
- 	IIC_SDA=0;
-	delay_us(1);
-	IIC_SCL=0;
+	SDA_Clr();
+	SCL_Clr();
+	#ifdef FAST_IIC_FOR_SSD1306
+		NOP(1);
+	#else
+		delay_us(1);
+	#endif
+ 	SDA_Set();
+	#ifdef FAST_IIC_FOR_SSD1306
+		NOP(1);
+	#else
+		delay_us(1);
+	#endif
+	SCL_Set();
 }
 
 static void IIC_Stop(void)
 {
 	SDA_OUT();
-	IIC_SCL=0;
-	IIC_SDA=0;
- 	delay_us(1);
-	IIC_SCL=1; 
-	IIC_SDA=1;
-	delay_us(1);							   	
+	SCL_Set();
+	SDA_Set();
+	#ifdef FAST_IIC_FOR_SSD1306
+		NOP(1);
+	#else
+		delay_us(1);
+	#endif
+	SCL_Clr();
+	SDA_Clr();
+	#ifdef FAST_IIC_FOR_SSD1306
+		NOP(1);
+	#else
+		delay_us(1);
+	#endif						   	
 }
 
 static u8 IIC_Wait_Ack(void)
 {
 	u8 ucErrTime=0;
-	SDA_IN();IIC_SDA=1;
-	IIC_SCL=1;delay_us(1);
+	SDA_IN();SDA_Clr();
+	SCL_Clr();
+	#ifdef FAST_IIC_FOR_SSD1306
+		NOP(1);
+	#else
+		delay_us(1);
+	#endif
 	while(READ_SDA)
 	{
 		ucErrTime++;
@@ -160,7 +225,7 @@ static u8 IIC_Wait_Ack(void)
 			return 1;
 		}
 	}
-	IIC_SCL=0;
+	SCL_Set();
 	return 0;  
 }
 
@@ -168,14 +233,22 @@ static void IIC_Send_Byte(u8 txd)
 {                        
     u8 t;   
 	SDA_OUT(); 	    
-    IIC_SCL=0;
+    SCL_Set();
     for(t=0;t<8;t++)
     {              
-        IIC_SDA=(txd&0x80)>>7;
-        txd<<=1; 	  
-		delay_us(1);
-		IIC_SCL=1;
-		delay_us(1);
-		IIC_SCL=0;	
+        (txd&0x80) ? (SDA_Clr()) : (SDA_Set());
+        txd<<=1;
+		#ifdef FAST_IIC_FOR_SSD1306
+			NOP(1);
+		#else
+			delay_us(1);
+		#endif
+		SCL_Clr();
+		#ifdef FAST_IIC_FOR_SSD1306
+			NOP(6);
+		#else
+			delay_us(1);
+		#endif
+		SCL_Set();	
     }	 
 }

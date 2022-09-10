@@ -5,8 +5,6 @@
 //		SDA -> GPIOB7
 **********************************************/
 
-#include "sys.h"
-#include "stdlib.h"
 #include "math.h"
 
 #include "iic.h"

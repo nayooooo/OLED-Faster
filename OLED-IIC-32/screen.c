@@ -1,4 +1,3 @@
-#include "sys.h"
 #include "screen.h"
 #include <stdlib.h>
 #include <math.h>
