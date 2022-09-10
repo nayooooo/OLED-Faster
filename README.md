@@ -8,7 +8,7 @@
 
 # OLED-IIC-32 #
 
-适用于STM32单片机的软件IIC驱动OLED。
+适用于STM32单片机的软件IIC驱动OLED，在72MHz下，能达到90Hz。
 
 # OLED-SPI-32 #
 
