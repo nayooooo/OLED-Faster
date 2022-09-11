@@ -1101,16 +1101,19 @@ void OLED_Fill(u8 x1,u8 y1,u8 x2,u8 y2,u8 mode)
 	OLED_Refresh_Gram();
 }
 
-//OLEDï¿½ï¿½Ê¾ï¿½Ö·ï¿½
+//OLEDÏÔÊ¾×Ö·û
 void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 size,u8 mode)
 {      			    
 	u8 temp,t,t1;
 	u8 y0=y;
-	u8 csize=(size/8+((size%8)?1:0))*(size/2);
+	u8 csize;
+	if(size==8) csize=8;
+	else csize=(size/8+((size%8)?1:0))*(size/2);
 	chr=chr-' ';
     for(t=0;t<csize;t++)
     {   
-		if(size==12)temp=asc2_1206[chr][t];
+		if(size==8)temp=asc2_0808[chr][t];
+		else if(size==12)temp=asc2_1206[chr][t];
 		else if(size==16)temp=asc2_1608[chr][t];
 		else if(size==24)temp=asc2_2412[chr][t];
 		else return;
@@ -1130,7 +1133,7 @@ void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 size,u8 mode)
     }          
 }
 
-//OLEDï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
+//OLEDÏÔÊ¾Êý×Ö
 void OLED_ShowNum(u8 x,u8 y,u32 num,u8 len,u8 size,u8 mode)
 {         	
 	u8 t,temp;
@@ -1142,13 +1145,28 @@ void OLED_ShowNum(u8 x,u8 y,u32 num,u8 len,u8 size,u8 mode)
 		{
 			if(temp==0)
 			{
-				OLED_ShowChar(x+(size/2)*t,y,' ',size,mode);
+				if(size==8) OLED_ShowChar(x+size*t,y,' ',size,mode);
+				else OLED_ShowChar(x+(size/2)*t,y,' ',size,mode);
 				continue;
 			}else enshow=1; 
 		 	 
 		}
-	 	OLED_ShowChar(x+(size/2)*t,y,temp+'0',size,1); 
+	 	if(size==8) OLED_ShowChar(x+size*t,y,temp+'0',size,1);
+		else OLED_ShowChar(x+(size/2)*t,y,temp+'0',size,1);
 	}
+}
+
+//OLEDÏÔÊ¾Êý×Ö£¬×Ô¶¯¼ÆËã³¤¶È
+void OLED_ShowNums(u8 x,u8 y,u32 num,u8 size,u8 mode)
+{         	
+	u8 digit = 0;
+	u32 temp = num;
+	
+	do{
+		temp /= 10;
+		digit++;
+	}while(temp);
+	OLED_ShowNum(x, y, num, digit, size, mode);
 }
 
 //OLEDï¿½ï¿½Ê¾ï¿½Ö·ï¿½ï¿½ï¿½
@@ -1159,7 +1177,8 @@ void OLED_ShowString(u8 x,u8 y,const u8 *p,u8 size,u8 mode)
         if(x>(OLED_COL_MAX-(size/2))){x=0;y+=size;}
         if(y>(OLED_ROW_MAX-size)){y=x=0;OLED_Clear();}
         OLED_ShowChar(x,y,*p,size,mode);	 
-        x+=size/2;
+        if(size==8) x+=size;
+		else x+=size/2;
         p++;
     }
 }
