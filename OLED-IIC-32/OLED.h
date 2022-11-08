@@ -149,9 +149,6 @@ void OLED_Draw_Two_Vertical_Ellipses(u8 x0, u8 y0, u8 a, u8 b, u8 mode);
 void OLED_DrawEllipse_Rotate(u8 x0, u8 y0, u8 a, u8 b, u16 angle, u8 mode);
 void OLED_Draw_Filled_Ellipse_Rotate(u8 x0, u8 y0, u8 a, u8 b, u16 angle, u8 mode);
 void OLED_Draw_Two_Vertical_Ellipses_Rotate(u8 x0, u8 y0, u8 a, u8 b, u16 angle, u8 mode);
-void OLED_Draw_Nuno_Triangle(u8 x0, u8 y0, u8 r, u8 mode);
-
-void OLED_Draw_Fish(u8 x0, u8 y0, u8 size, bool dir, u8 mode);
 	
 void OLED_ShowBMP(u8 x,u8 y,const u8 *p,u8 width,u8 height,u8 mode);
 void OLED_Fill(u8 x1,u8 y1,u8 x2,u8 y2,u8 mode);

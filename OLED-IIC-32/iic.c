@@ -174,13 +174,13 @@ static void IIC_Start(void)
 	SDA_Clr();
 	SCL_Clr();
 	#ifdef FAST_IIC_FOR_SSD1306
-		NOP(1);
+		__NOP();
 	#else
 		delay_us(1);
 	#endif
  	SDA_Set();
 	#ifdef FAST_IIC_FOR_SSD1306
-		NOP(1);
+		__NOP();
 	#else
 		delay_us(1);
 	#endif
@@ -193,14 +193,14 @@ static void IIC_Stop(void)
 	SCL_Set();
 	SDA_Set();
 	#ifdef FAST_IIC_FOR_SSD1306
-		NOP(1);
+		__NOP();
 	#else
 		delay_us(1);
 	#endif
 	SCL_Clr();
 	SDA_Clr();
 	#ifdef FAST_IIC_FOR_SSD1306
-		NOP(1);
+		__NOP();
 	#else
 		delay_us(1);
 	#endif						   	
@@ -212,7 +212,7 @@ static u8 IIC_Wait_Ack(void)
 	SDA_IN();SDA_Clr();
 	SCL_Clr();
 	#ifdef FAST_IIC_FOR_SSD1306
-		NOP(1);
+		__NOP();
 	#else
 		delay_us(1);
 	#endif
@@ -239,13 +239,14 @@ static void IIC_Send_Byte(u8 txd)
         (txd&0x80) ? (SDA_Clr()) : (SDA_Set());
         txd<<=1;
 		#ifdef FAST_IIC_FOR_SSD1306
-			NOP(1);
+			__NOP();
 		#else
 			delay_us(1);
 		#endif
 		SCL_Clr();
 		#ifdef FAST_IIC_FOR_SSD1306
-			NOP(6);
+			__NOP();__NOP();__NOP();
+			__NOP();__NOP();__NOP();
 		#else
 			delay_us(1);
 		#endif
