@@ -1,11 +1,11 @@
-C51 COMPILER V9.54   SCREEN                                                                07/29/2022 15:20:17 PAGE 1   
+C51 COMPILER V9.60.0.0   SCREEN                                                            12/03/2022 19:45:33 PAGE 1   
 
 
-C51 COMPILER V9.54, COMPILATION OF MODULE SCREEN
-OBJECT MODULE PLACED IN ..\Obj\screen.obj
-COMPILER INVOKED BY: D:\keil 5 - C51\C51\BIN\C51.EXE ..\Hardware\OLED\screen.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\
-                    -Fwlib;..\Hardware\LED;..\Hardware\OLED;..\Software\IIC;..\User;..\System\MyTimer) DEBUG OBJECTEXTEND PRINT(.\Listings\sc
-                    -reen.lst) OBJECT(..\Obj\screen.obj)
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SCREEN
+OBJECT MODULE PLACED IN .\Object\screen.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\Hardware\OLED\screen.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Fwlib
+                    -;..\Hardware\LED;..\Hardware\OLED;..\User;..\System\MyTimer;..\System\MyI2C;..\System\MyUART) DEBUG OBJECTEXTEND PRINT(.
+                    -\Listings\screen.lst) OBJECT(.\Object\screen.obj)
 
 line level    source
 

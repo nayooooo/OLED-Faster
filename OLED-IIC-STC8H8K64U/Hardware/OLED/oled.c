@@ -1,12 +1,11 @@
 /**********************************************
 //		GND -> GND
 //		VCC -> VCC
-//		SDA -> P1.4
-//		SCL -> P1.5
+//		SDA -> P2.4
+//		SCL -> P2.5
 **********************************************/
 #include "math.h"
 
-#include "iic.h"
 #include "oled.h"
 #include "oledfont.h"
 //OLED的显存
@@ -87,17 +86,17 @@ void OLED_Refresh_Gram(void)
 //OLED开显示
 void OLED_Display_On(void)
 {
-	OLED_WR_Byte(0X8D,OLED_CMD);
-	OLED_WR_Byte(0X14,OLED_CMD);
-	OLED_WR_Byte(0XAF,OLED_CMD);
+	OLED_WR_Byte_Cmd(0X8D);
+	OLED_WR_Byte_Cmd(0X14);
+	OLED_WR_Byte_Cmd(0XAF);
 }
 
 //OLED关显示
 void OLED_Display_Off(void)
 {
-	OLED_WR_Byte(0X8D,OLED_CMD);
-	OLED_WR_Byte(0X10,OLED_CMD);
-	OLED_WR_Byte(0XAE,OLED_CMD);
+	OLED_WR_Byte_Cmd(0X8D);
+	OLED_WR_Byte_Cmd(0X10);
+	OLED_WR_Byte_Cmd(0XAE);
 }
 
 //OLED清屏
@@ -418,13 +417,21 @@ void OLED_ShowString(u8 x,u8 y,const u8 *p,u8 size,u8 mode)
 
 static void OLED_GPIO_Init(void)
 {
-	IIC_GPIO_Config();
+	#ifdef USE_SOFT_IIC
+		IIC_GPIO_Config();
+	#endif /* USE_SOFT_IIC */
+	#ifdef USE_HARD_IIC
+		I2C_GPIO_Config();
+	#endif /* USE_HARD_IIC */
 }
 
 //初始化OLED
 void OLED_Init(void)
 {
 	OLED_GPIO_Init();
+	#ifdef USE_HARD_IIC
+		I2C_Config();
+	#endif /* USE_HARD_IIC */
 					  
 	OLED_WR_Byte_Cmd(0xAE);
 	OLED_WR_Byte_Cmd(0xD5);

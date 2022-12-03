@@ -1,12 +1,8 @@
 #include "MyTimer.h"
 
-#include "timer.h"
-
 #include "screen.h"
 
-extern u8 OLED_Event_Flag;
-extern u32 frame;
-extern u32 f_OLED;
+u32 timer0_sec = 0;
 
 static void MyTimer0_Init(void)
 {
@@ -28,21 +24,33 @@ void MyTimer_Init(void)
 }
 
 /********************* Timer0中断函数************************/
+extern u8 OLED_Event_Flag;
+extern u32 frame;
+extern u32 f_OLED;
+
 void timer0_int (void) interrupt TIMER0_VECTOR
 {
 	static u16 i = 0;
-	static u32 sec = 0;
 	
 	i++;
 	if(i>=Timer0_Int_Times)  // 每1秒计算一次频率
 	{
 		i = 0;
-		sec++;
-		if(sec)
+		timer0_sec++;
+		if(timer0_sec)
 		{
-			f_OLED = (u32)(frame/sec);
-			OLED_Event_Flag = OLED_Update_F;
+			f_OLED = (u32)(frame / timer0_sec);
+			OLED_Event_Flag = OLED_Update_Event;
 		}
 		else frame = 0;
 	}
 }
+
+
+
+
+
+
+
+
+

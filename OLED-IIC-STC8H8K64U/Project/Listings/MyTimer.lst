@@ -1,69 +1,77 @@
-C51 COMPILER V9.54   MYTIMER                                                               07/29/2022 15:20:16 PAGE 1   
+C51 COMPILER V9.60.0.0   MYTIMER                                                           12/03/2022 19:45:33 PAGE 1   
 
 
-C51 COMPILER V9.54, COMPILATION OF MODULE MYTIMER
-OBJECT MODULE PLACED IN ..\Obj\MyTimer.obj
-COMPILER INVOKED BY: D:\keil 5 - C51\C51\BIN\C51.EXE ..\System\MyTimer\MyTimer.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(.
-                    -.\Fwlib;..\Hardware\LED;..\Hardware\OLED;..\Software\IIC;..\User;..\System\MyTimer) DEBUG OBJECTEXTEND PRINT(.\Listings\
-                    -MyTimer.lst) OBJECT(..\Obj\MyTimer.obj)
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MYTIMER
+OBJECT MODULE PLACED IN .\Object\MyTimer.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\System\MyTimer\MyTimer.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Fwl
+                    -ib;..\Hardware\LED;..\Hardware\OLED;..\User;..\System\MyTimer;..\System\MyI2C;..\System\MyUART) DEBUG OBJECTEXTEND PRINT
+                    -(.\Listings\MyTimer.lst) OBJECT(.\Object\MyTimer.obj)
 
 line level    source
 
    1          #include "MyTimer.h"
    2          
-   3          #include "timer.h"
+   3          #include "screen.h"
    4          
-   5          #include "screen.h"
+   5          u32 timer0_sec = 0;
    6          
-   7          extern u8 OLED_Event_Flag;
-   8          extern u32 frame;
-   9          extern u32 f_OLED;
-  10          
-  11          static void MyTimer0_Init(void)
-  12          {
-  13   1              TIM_InitTypeDef TIM_InitStructure;
-  14   1              
-  15   1              TIM_InitStructure.TIM_Mode              = TIM_16BitAutoReload;  // 16位自动重装
-  16   1              TIM_InitStructure.TIM_Priority  = Priority_1;                   // 中断优先级1
-  17   1              TIM_InitStructure.TIM_Interrupt = ENABLE;                               // 允许中断
-  18   1              TIM_InitStructure.TIM_ClkSource = TIM_CLOCK_1T;                 // 指定时钟源
-  19   1              TIM_InitStructure.TIM_ClkOut    = DISABLE;                              // 不输出高速脉冲
-  20   1              TIM_InitStructure.TIM_Value             = 65536UL - (MAIN_Fosc / Timer0_Int_Times);     // 初值
-  21   1              TIM_InitStructure.TIM_Run               = ENABLE;                               // 开始运行
-  22   1              while(Timer_Inilize(My_Timer, &TIM_InitStructure));
-  23   1      }
-  24          
-  25          void MyTimer_Init(void)
-  26          {
-  27   1              MyTimer0_Init();
-  28   1      }
-  29          
-  30          /********************* Timer0中断函数************************/
+   7          static void MyTimer0_Init(void)
+   8          {
+   9   1              TIM_InitTypeDef TIM_InitStructure;
+  10   1              
+  11   1              TIM_InitStructure.TIM_Mode              = TIM_16BitAutoReload;  // 16位自动重装
+  12   1              TIM_InitStructure.TIM_Priority  = Priority_1;                   // 中断优先级1
+  13   1              TIM_InitStructure.TIM_Interrupt = ENABLE;                               // 允许中断
+  14   1              TIM_InitStructure.TIM_ClkSource = TIM_CLOCK_1T;                 // 指定时钟源
+  15   1              TIM_InitStructure.TIM_ClkOut    = DISABLE;                              // 不输出高速脉冲
+  16   1              TIM_InitStructure.TIM_Value             = 65536UL - (MAIN_Fosc / Timer0_Int_Times);     // 初值
+  17   1              TIM_InitStructure.TIM_Run               = ENABLE;                               // 开始运行
+  18   1              while(Timer_Inilize(My_Timer, &TIM_InitStructure));
+  19   1      }
+  20          
+  21          void MyTimer_Init(void)
+  22          {
+  23   1              MyTimer0_Init();
+  24   1      }
+  25          
+  26          /********************* Timer0中断函数************************/
+  27          extern u8 OLED_Event_Flag;
+  28          extern u32 frame;
+  29          extern u32 f_OLED;
+  30          
   31          void timer0_int (void) interrupt TIMER0_VECTOR
   32          {
   33   1              static u16 i = 0;
-  34   1              static u32 sec = 0;
-  35   1              
-  36   1              i++;
-  37   1              if(i>=Timer0_Int_Times)  // 每1秒计算一次频率
-  38   1              {
-  39   2                      i = 0;
-  40   2                      sec++;
-  41   2                      if(sec)
-  42   2                      {
-  43   3                              f_OLED = (u32)(frame/sec);
-  44   3                              OLED_Event_Flag = OLED_Update_F;
-  45   3                      }
-  46   2                      else frame = 0;
-  47   2              }
-  48   1      }
+  34   1              
+  35   1              i++;
+  36   1              if(i>=Timer0_Int_Times)  // 每1秒计算一次频率
+  37   1              {
+  38   2                      i = 0;
+  39   2                      timer0_sec++;
+  40   2                      if(timer0_sec)
+  41   2                      {
+  42   3                              f_OLED = (u32)(frame / timer0_sec);
+  43   3                              OLED_Event_Flag = OLED_Update_Event;
+  44   3                      }
+  45   2                      else frame = 0;
+  46   2              }
+  47   1      }
+  48          
+  49          
+  50          
+  51          
+  52          
+  53          
+C51 COMPILER V9.60.0.0   MYTIMER                                                           12/03/2022 19:45:33 PAGE 2   
+
+  54          
+  55          
+  56          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =    238    ----
    CONSTANT SIZE    =   ----    ----
-C51 COMPILER V9.54   MYTIMER                                                               07/29/2022 15:20:16 PAGE 2   
-
    XDATA SIZE       =      6       8
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----

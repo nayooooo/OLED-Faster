@@ -272,31 +272,6 @@ void PrintString1(u8 *puts)
 {
     for (; *puts != 0;	puts++)  TX1_write2buff(*puts); 	//Óöµ½Í£Ö¹·û0½áÊø
 }
-
-void UART1_int (void) interrupt UART1_VECTOR
-{
-	if(RI)
-	{
-		RI = 0;
-		if(COM1.B_RX_OK == 0)
-		{
-			if(COM1.RX_Cnt >= COM_RX1_Lenth)	COM1.RX_Cnt = 0;
-			RX1_Buffer[COM1.RX_Cnt++] = SBUF;
-			COM1.RX_TimeOut = TimeOutSet1;
-		}
-	}
-
-	if(TI)
-	{
-		TI = 0;
-		if(COM1.TX_read != COM1.TX_write)
-		{
-		 	SBUF = TX1_Buffer[COM1.TX_read];
-			if(++COM1.TX_read >= COM_TX1_Lenth)		COM1.TX_read = 0;
-		}
-		else	COM1.B_TX_busy = 0;
-	}
-}
 #endif
 
 /********************* UART2 º¯Êý ************************/

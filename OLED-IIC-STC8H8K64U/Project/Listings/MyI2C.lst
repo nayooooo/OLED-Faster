@@ -1,0 +1,220 @@
+C51 COMPILER V9.60.0.0   MYI2C                                                             12/03/2022 19:45:33 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MYI2C
+OBJECT MODULE PLACED IN .\Object\MyI2C.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\System\MyI2C\MyI2C.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Fwlib;.
+                    -.\Hardware\LED;..\Hardware\OLED;..\User;..\System\MyTimer;..\System\MyI2C;..\System\MyUART) DEBUG OBJECTEXTEND PRINT(.\L
+                    -istings\MyI2C.lst) OBJECT(.\Object\MyI2C.obj)
+
+line level    source
+
+   1          #include "MyI2C.h"
+   2          
+   3          #include "OLED.h"
+   4          
+   5          void I2C_GPIO_Config(void)
+   6          {
+   7   1              GPIO_InitTypeDef GPIO_InitStructure;
+   8   1              
+   9   1              GPIO_InitStructure.Pin  = SDA_Pin|SCL_Pin;              // I2C.SDA I2C.SCL
+  10   1              GPIO_InitStructure.Mode = GPIO_PullUp;                  // 准双向口
+  11   1              GPIO_Inilize(IIC_GPIO_Port, &GPIO_InitStructure);
+  12   1      }
+  13          
+  14          void I2C_Config(void)
+  15          {
+  16   1              I2C_InitTypeDef I2C_InitStructure;
+  17   1              I2C_InitStructure.I2C_Mode      = I2C_Mode_Master;      //主从选择 I2C_Mode_Master, I2C_Mode_Slave
+  18   1              I2C_InitStructure.I2C_Enable    = ENABLE;                       //I2C功能使能, ENABLE, DISABLE
+  19   1              I2C_InitStructure.I2C_MS_WDTA   = DISABLE;                      //主机使能自动发送, ENABLE, DISABLE
+  20   1              I2C_InitStructure.I2C_MS_Interrupt = DISABLE;           //使能主机模式中断, ENABLE, DISABLE
+  21   1              I2C_InitStructure.I2C_Speed     = 0;                            //总线速度=Fosc/2/(Speed*2+4), 0~63
+  22   1              I2C_InitStructure.I2C_IoUse     = I2C_P24_P25;          //IO口切换 I2C_P14_P15, I2C_P24_P25, I2C_P33_P32
+  23   1      
+  24   1              I2C_Init(&I2C_InitStructure);
+  25   1      }
+  26          
+  27          void My_I2C_Init(void)
+  28          {
+  29   1              I2C_GPIO_Config();
+  30   1              I2C_Config();
+  31   1      }
+  32          
+  33          //========================================================================
+  34          // 函数: void IIC_WR_Byte(u8 buf, u8 cmd)
+  35          // 描述: I2C写入数据函数.
+  36          // 参数: buf写入数据, cmd写入数据或命令.
+  37          // 返回: none.
+  38          // 版本: V1.0, 2020-09-15
+  39          //========================================================================
+  40          void IIC_WR_Byte(u8 buf, u8 cmd)
+  41          {
+  42   1              EAXSFR();               /* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展SFR(XSFR) */
+  43   1              Start();                                //发送起始命令
+  44   1              SendData(SLAVE_ADDRESS);                //发送设备地址+写命令
+  45   1              RecvACK();
+  46   1              if(cmd)                 // 数据
+  47   1              {
+  48   2                      SendData(OLED_DATA_CHR);
+  49   2              }
+  50   1              else                    // 命令
+  51   1              {
+  52   2                      SendData(OLED_CMD_CHR);
+  53   2              }
+C51 COMPILER V9.60.0.0   MYI2C                                                             12/03/2022 19:45:33 PAGE 2   
+
+  54   1              RecvACK();
+  55   1              SendData(buf);
+  56   1              RecvACK();
+  57   1              Stop();                                 //发送停止命令
+  58   1              EAXRAM();               /* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展RAM(XRAM) */
+  59   1      }
+  60          
+  61          //========================================================================
+  62          // 函数: void IIC_WR_Byte_Dat(u8 buf)
+  63          // 描述: I2C写入数据函数.
+  64          // 参数: buf写入数据
+  65          // 返回: none.
+  66          // 版本: V1.0, 2020-09-15
+  67          //========================================================================
+  68          void IIC_WR_Byte_Dat(u8 buf)
+  69          {
+  70   1              EAXSFR();               /* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展SFR(XSFR) */
+  71   1              Start();                                //发送起始命令
+  72   1              SendData(SLAVE_ADDRESS);                //发送设备地址+写命令
+  73   1              RecvACK();
+  74   1              SendData(OLED_DATA_CHR);
+  75   1              RecvACK();
+  76   1              SendData(buf);
+  77   1              RecvACK();
+  78   1              Stop();                                 //发送停止命令
+  79   1              EAXRAM();               /* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展RAM(XRAM) */
+  80   1      }
+  81          
+  82          //========================================================================
+  83          // 函数: void IIC_WR_Byte_Cmd(u8 buf)
+  84          // 描述: I2C写入命令函数.
+  85          // 参数: buf写入命令
+  86          // 返回: none.
+  87          // 版本: V1.0, 2020-09-15
+  88          //========================================================================
+  89          void IIC_WR_Byte_Cmd(u8 buf)
+  90          {
+  91   1              EAXSFR();               /* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展SFR(XSFR) */
+  92   1              Start();                                //发送起始命令
+  93   1              SendData(SLAVE_ADDRESS);                //发送设备地址+写命令
+  94   1              RecvACK();
+  95   1              SendData(OLED_CMD_CHR);
+  96   1              RecvACK();
+  97   1              SendData(buf);
+  98   1              RecvACK();
+  99   1              Stop();                                 //发送停止命令
+ 100   1              EAXRAM();               /* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展RAM(XRAM) */
+ 101   1      }
+ 102          
+ 103          //========================================================================
+ 104          // 函数: void IIC_WR_Byte_Fast(u8 *buf, u16 size, u8 cmd)
+ 105          // 描述: I2C写入数据函数.
+ 106          // 参数: *buf写入数据, size写入数据个数，cmd写入数据或命令.
+ 107          // 返回: none.
+ 108          // 版本: V1.0, 2020-09-15
+ 109          //========================================================================
+ 110          void IIC_WR_Byte_Fast(u8 *buf, u16 size, u8 cmd)
+ 111          {
+ 112   1              EAXSFR();               /* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展SFR(XSFR) */
+ 113   1              Start();                                //发送起始命令
+ 114   1              SendData(SLAVE_ADDRESS);                //发送设备地址+写命令
+ 115   1              RecvACK();
+C51 COMPILER V9.60.0.0   MYI2C                                                             12/03/2022 19:45:33 PAGE 3   
+
+ 116   1              if(cmd)                 // 数据
+ 117   1              {
+ 118   2                      SendData(OLED_DATA_CHR);
+ 119   2              }
+ 120   1              else                    // 命令
+ 121   1              {
+ 122   2                      SendData(OLED_CMD_CHR);
+ 123   2              }
+ 124   1              RecvACK();
+ 125   1              while(size--)
+ 126   1              {
+ 127   2                      SendData(*buf++);
+ 128   2                      RecvACK();
+ 129   2              }
+ 130   1              Stop();                                 //发送停止命令
+ 131   1              EAXRAM();               /* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展RAM(XRAM) */
+ 132   1      }
+ 133          
+ 134          //========================================================================
+ 135          // 函数: void IIC_WR_Byte_Dat_Fast(u8 *buf, u16 size)
+ 136          // 描述: I2C写入数据函数.
+ 137          // 参数: *buf写入数据, size写入数据个数，cmd写入数据或命令.
+ 138          // 返回: none.
+ 139          // 版本: V1.0, 2020-09-15
+ 140          //========================================================================
+ 141          void IIC_WR_Byte_Dat_Fast(u8 *buf, u16 size)
+ 142          {
+ 143   1              EAXSFR();               /* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展SFR(XSFR) */
+ 144   1              Start();                                //发送起始命令
+ 145   1              SendData(SLAVE_ADDRESS);                //发送设备地址+写命令
+ 146   1              RecvACK();
+ 147   1              SendData(OLED_DATA_CHR);
+ 148   1              RecvACK();
+ 149   1              while(size--)
+ 150   1              {
+ 151   2                      SendData(*buf++);
+ 152   2                      RecvACK();
+ 153   2              }
+ 154   1              Stop();                                 //发送停止命令
+ 155   1              EAXRAM();               /* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展RAM(XRAM) */
+ 156   1      }
+ 157          
+ 158          //========================================================================
+ 159          // 函数: void IIC_WR_Byte_Cmd_Fast(u8 *buf, u16 size)
+ 160          // 描述: I2C写入命令函数.
+ 161          // 参数: *buf写入数据, size写入数据个数
+ 162          // 返回: none.
+ 163          // 版本: V1.0, 2020-09-15
+ 164          //========================================================================
+ 165          void IIC_WR_Byte_Cmd_Fast(u8 *buf, u16 size)
+ 166          {
+ 167   1              EAXSFR();               /* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展SFR(XSFR) */
+ 168   1              Start();                                //发送起始命令
+ 169   1              SendData(SLAVE_ADDRESS);                //发送设备地址+写命令
+ 170   1              RecvACK();
+ 171   1              SendData(OLED_CMD_CHR);
+ 172   1              RecvACK();
+ 173   1              while(size--)
+ 174   1              {
+ 175   2                      SendData(*buf++);
+ 176   2                      RecvACK();
+ 177   2              }
+C51 COMPILER V9.60.0.0   MYI2C                                                             12/03/2022 19:45:33 PAGE 4   
+
+ 178   1              Stop();                                 //发送停止命令
+ 179   1              EAXRAM();               /* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展RAM(XRAM) */
+ 180   1      }
+ 181          
+ 182          
+ 183          
+ 184          
+ 185          
+ 186          
+ 187          
+ 188          
+ 189          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    478    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----      34
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

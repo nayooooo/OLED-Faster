@@ -1,0 +1,144 @@
+C51 COMPILER V9.60.0.0   MYUART                                                            12/03/2022 19:45:33 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MYUART
+OBJECT MODULE PLACED IN .\Object\MyUART.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\System\MyUART\MyUART.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Fwlib
+                    -;..\Hardware\LED;..\Hardware\OLED;..\User;..\System\MyTimer;..\System\MyI2C;..\System\MyUART) DEBUG OBJECTEXTEND PRINT(.
+                    -\Listings\MyUART.lst) OBJECT(.\Object\MyUART.obj)
+
+line level    source
+
+   1          #include "MyUART.h"
+   2          
+   3          #include "delay.h"
+   4          
+   5          /*---------------------------------------
+   6           *
+   7           * 发送数据请间隔至少15ms
+   8           *
+   9           --------------------------------------*/
+  10          
+  11          COMx_Define *My_COM = &COM1;
+  12          u8 xdata * xdata My_TX_Buffer = TX1_Buffer;
+  13          u8 xdata * xdata My_RX_Buffer = RX1_Buffer;
+  14          
+  15          // 记录接收缓冲区接收的字符数目
+  16          // 在串口回传时被更新
+  17          u8 My_RX_Cnt = 0;
+  18          
+  19          /* 重定向fputc -------------------------------------------*/
+  20          #include <stdio.h>
+  21          char putchar(char ch)
+  22          {
+  23   1              My_TX_write2buff((u8)ch);
+  24   1              return ch;
+  25   1      }
+  26          
+  27          /* 初始化函数 --------------------------------------------*/
+  28          static void UART_GPIO_Config(void)
+  29          {
+  30   1              GPIO_InitTypeDef GPIO_InitStructure;
+  31   1              
+  32   1              GPIO_InitStructure.Pin  = UART1_Rx_Pin|UART1_Tx_Pin;    // UART1.Rx UART1.Tx
+  33   1              GPIO_InitStructure.Mode = GPIO_PullUp;                                  // 准双向口
+  34   1              GPIO_Inilize(UART1_Port, &GPIO_InitStructure);
+  35   1      }
+  36          
+  37          static void UART1_Init(void)
+  38          {
+  39   1              COMx_InitDefine COMx_InitStructure;
+  40   1              
+  41   1              COMx_InitStructure.UART_Mode = UART_8bit_BRTx;                  // 8位数据，可变波特率
+  42   1              COMx_InitStructure.UART_BRT_Use = BRT_Timer1;                   // 使用定时器1作为波特率发生器
+  43   1              COMx_InitStructure.UART_BaudRate = UART1_BaudRate;              // 波特率为115200
+  44   1              COMx_InitStructure.Morecommunicate = DISABLE;                   // 禁止多机通讯
+  45   1              COMx_InitStructure.UART_RxEnable = ENABLE;                              // 允许接收
+  46   1              COMx_InitStructure.BaudRateDouble = DISABLE;                    // 禁止波特率加倍
+  47   1              COMx_InitStructure.UART_Interrupt = ENABLE;                             // 允许中断控制
+  48   1              COMx_InitStructure.UART_Priority = Priority_0;                  // 0优先级
+  49   1              COMx_InitStructure.UART_P_SW = UART1_SW_P30_P31;                // 使用P30、P31端口
+  50   1              UART_Configuration(UART1, &COMx_InitStructure);
+  51   1      }
+  52          
+  53          void My_UART_Init(void)
+C51 COMPILER V9.60.0.0   MYUART                                                            12/03/2022 19:45:33 PAGE 2   
+
+  54          {
+  55   1              UART_GPIO_Config();
+  56   1              UART1_Init();
+  57   1              
+  58   1              printf("\r\nSTC8H8K64U UART1 Test Programme!\r\n");  // UART1配置完成
+  59   1      }
+  60          
+  61          /* 串口发送接收 -------------------------------------------*/
+  62          void My_TX_write2buff(u8 dat)
+  63          {
+  64   1              TX1_write2buff(dat);
+  65   1      }
+  66          
+  67          void My_PrintString(u8 *puts)
+  68          {
+  69   1              PrintString1(puts);
+  70   1      }
+  71          
+  72          // 串口回传
+  73          void My_UART_Echo(void)
+  74          {
+  75   1              u8 i;
+  76   1              
+  77   1              if(My_COM->RX_TimeOut > 0)
+  78   1              {
+  79   2                      if(--My_COM->RX_TimeOut == 0)
+  80   2                      {
+  81   3                              if(My_COM->RX_Cnt > 0)
+  82   3                              {
+  83   4                                      My_RX_Cnt = My_COM->RX_Cnt;
+  84   4                                      for(i=0; i<My_COM->RX_Cnt; i++) My_TX_write2buff(My_RX_Buffer[i]);
+  85   4                                      My_COM->RX_Cnt = 0;
+  86   4                              }
+  87   3                      }
+  88   2              }
+  89   1      }
+  90          
+  91          /* 串口中断函数 -------------------------------------------*/
+  92          void UART1_int (void) interrupt UART1_VECTOR
+  93          {
+  94   1              if(RI)  // 应该是用了递归
+  95   1              {
+  96   2                      RI = 0;
+  97   2                      if(COM1.B_RX_OK == 0)
+  98   2                      {
+  99   3                              if(COM1.RX_Cnt >= COM_RX1_Lenth)        COM1.RX_Cnt = 0;
+ 100   3                              RX1_Buffer[COM1.RX_Cnt++] = SBUF;  // 从这里开始递
+ 101   3                              COM1.RX_TimeOut = TimeOutSet1;
+ 102   3                      }
+ 103   2              }
+ 104   1      
+ 105   1              if(TI)
+ 106   1              {
+ 107   2                      TI = 0;
+ 108   2                      if(COM1.TX_read != COM1.TX_write)
+ 109   2                      {
+ 110   3                              SBUF = TX1_Buffer[COM1.TX_read];
+ 111   3                              if(++COM1.TX_read >= COM_TX1_Lenth)             COM1.TX_read = 0;
+ 112   3                      }
+ 113   2                      else    COM1.B_TX_busy = 0;
+ 114   2              }
+ 115   1      }
+C51 COMPILER V9.60.0.0   MYUART                                                            12/03/2022 19:45:33 PAGE 3   
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    379    ----
+   CONSTANT SIZE    =     37    ----
+   XDATA SIZE       =      8      16
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

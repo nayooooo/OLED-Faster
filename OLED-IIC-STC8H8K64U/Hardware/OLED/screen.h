@@ -6,7 +6,7 @@
 
 typedef enum{
 	OLED_No_Event,			// 无事件
-	OLED_Update_F			// 更新频率
+	OLED_Update_Event		// 更新频率
 }OLED_Event_Flag_Typedef;
 
 void OLED_Mes_Type(void);

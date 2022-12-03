@@ -1,262 +1,261 @@
-C51 COMPILER V9.54   OLED                                                                  07/29/2022 15:20:17 PAGE 1   
+C51 COMPILER V9.60.0.0   OLED                                                              12/03/2022 19:45:33 PAGE 1   
 
 
-C51 COMPILER V9.54, COMPILATION OF MODULE OLED
-OBJECT MODULE PLACED IN ..\Obj\oled.obj
-COMPILER INVOKED BY: D:\keil 5 - C51\C51\BIN\C51.EXE ..\Hardware\OLED\oled.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Fw
-                    -lib;..\Hardware\LED;..\Hardware\OLED;..\Software\IIC;..\User;..\System\MyTimer) DEBUG OBJECTEXTEND PRINT(.\Listings\oled
-                    -.lst) OBJECT(..\Obj\oled.obj)
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE OLED
+OBJECT MODULE PLACED IN .\Object\oled.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\Hardware\OLED\oled.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Fwlib;.
+                    -.\Hardware\LED;..\Hardware\OLED;..\User;..\System\MyTimer;..\System\MyI2C;..\System\MyUART) DEBUG OBJECTEXTEND PRINT(.\L
+                    -istings\oled.lst) OBJECT(.\Object\oled.obj)
 
 line level    source
 
    1          /**********************************************
    2          //              GND -> GND
    3          //              VCC -> VCC
-   4          //              SDA -> P1.4
-   5          //              SCL -> P1.5
+   4          //              SDA -> P2.4
+   5          //              SCL -> P2.5
    6          **********************************************/
    7          #include "math.h"
    8          
-   9          #include "iic.h"
-  10          #include "oled.h"
-  11          #include "oledfont.h"
-  12          //OLED的显存
-  13          //存放格式如下（假设数组物理地址是第二下标为第一下标）
-  14          // 0 -> [7]0 1 2 3 ... 127
-  15          // 1 -> [6]0 1 2 3 ... 127
-  16          // 2 -> [5]0 1 2 3 ... 127
-  17          // 3 -> [4]0 1 2 3 ... 127
-  18          // 4 -> [3]0 1 2 3 ... 127
-  19          // 5 -> [2]0 1 2 3 ... 127
-  20          // 6 -> [1]0 1 2 3 ... 127
-  21          // 7 -> [0]0 1 2 3 ... 127
-  22          u8 OLED_GRAM[OLED_COL_MAX][OLED_PAGE_MAX];
-  23          
-  24          //m^n
-  25          u32 mypow(u8 m,u8 n)
-  26          {
-  27   1              u32 result=1;    
-  28   1              while(n--)result*=m;
-  29   1              return result;
-  30   1      }
-  31          
-  32          /* IIC读写函数 -------------------------------------*/
-  33          /* 慢速读写 ----------------------------------------*/
-  34          //向SSD1306写入一个字节。
-  35          //dat:要写入的数据/命令
-  36          //cmd:数据/命令标志 0,表示命令;1,表示数据;
-  37          static void OLED_WR_Byte(u8 dat,u8 cmd)
-  38          {
-  39   1              IIC_WR_Byte(dat, cmd);
-  40   1      }
-  41          
-  42          //向SSD1306写入一个字节数据。
-  43          //dat:要写入的数据
-  44          static void OLED_WR_Byte_Dat(u8 dat)
-  45          {
-  46   1              IIC_WR_Byte_Dat(dat);
-  47   1      }
-  48          
-  49          //向SSD1306写入一个字节命令。
-  50          //cmd:要写入的命令
-  51          static void OLED_WR_Byte_Cmd(u8 cmd)
-  52          {
-  53   1              IIC_WR_Byte_Cmd(cmd);
-C51 COMPILER V9.54   OLED                                                                  07/29/2022 15:20:17 PAGE 2   
+   9          #include "oled.h"
+  10          #include "oledfont.h"
+  11          //OLED的显存
+  12          //存放格式如下（假设数组物理地址是第二下标为第一下标）
+  13          // 0 -> [7]0 1 2 3 ... 127
+  14          // 1 -> [6]0 1 2 3 ... 127
+  15          // 2 -> [5]0 1 2 3 ... 127
+  16          // 3 -> [4]0 1 2 3 ... 127
+  17          // 4 -> [3]0 1 2 3 ... 127
+  18          // 5 -> [2]0 1 2 3 ... 127
+  19          // 6 -> [1]0 1 2 3 ... 127
+  20          // 7 -> [0]0 1 2 3 ... 127
+  21          u8 OLED_GRAM[OLED_COL_MAX][OLED_PAGE_MAX];
+  22          
+  23          //m^n
+  24          u32 mypow(u8 m,u8 n)
+  25          {
+  26   1              u32 result=1;    
+  27   1              while(n--)result*=m;
+  28   1              return result;
+  29   1      }
+  30          
+  31          /* IIC读写函数 -------------------------------------*/
+  32          /* 慢速读写 ----------------------------------------*/
+  33          //向SSD1306写入一个字节。
+  34          //dat:要写入的数据/命令
+  35          //cmd:数据/命令标志 0,表示命令;1,表示数据;
+  36          static void OLED_WR_Byte(u8 dat,u8 cmd)
+  37          {
+  38   1              IIC_WR_Byte(dat, cmd);
+  39   1      }
+  40          
+  41          //向SSD1306写入一个字节数据。
+  42          //dat:要写入的数据
+  43          static void OLED_WR_Byte_Dat(u8 dat)
+  44          {
+  45   1              IIC_WR_Byte_Dat(dat);
+  46   1      }
+  47          
+  48          //向SSD1306写入一个字节命令。
+  49          //cmd:要写入的命令
+  50          static void OLED_WR_Byte_Cmd(u8 cmd)
+  51          {
+  52   1              IIC_WR_Byte_Cmd(cmd);
+  53   1      }
+C51 COMPILER V9.60.0.0   OLED                                                              12/03/2022 19:45:33 PAGE 2   
 
-  54   1      }
-  55          /* 快速读写 ----------------------------------------*/
-  56          //向SSD1306写入一个字节。
-  57          //dat:要写入的数据/命令
-  58          //cmd:数据/命令标志 0,表示命令;1,表示数据;
-  59          static void OLED_WR_Byte_Fast(u8 *buf, u16 size, u8 cmd)
-  60          {
-  61   1              IIC_WR_Byte_Fast(buf, size, cmd);
-  62   1      }
-  63          
-  64          //向SSD1306写入一个字节数据。
-  65          //dat:要写入的数据
-  66          static void OLED_WR_Byte_Dat_Fast(u8 *Dat_Buf, u16 size)
-  67          {
-  68   1              IIC_WR_Byte_Dat_Fast(Dat_Buf, size);
-  69   1      }
-  70          
-  71          //向SSD1306写入一个字节命令。
-  72          //cmd:要写入的命令
-  73          static void OLED_WR_Byte_Cmd_Fast(u8 *Cmd_Buf, u16 size)
-  74          {
-  75   1              IIC_WR_Byte_Cmd_Fast(Cmd_Buf, size);
-  76   1      }
-  77          
-  78          /* 更新缓存到OLED ----------------------------------*/
-  79          void OLED_Refresh_Gram(void)
-  80          {
-  81   1              OLED_WR_Byte_Cmd (0xb0+0);
-  82   1              OLED_WR_Byte_Cmd (0x00);
-  83   1              OLED_WR_Byte_Cmd (0x10);
-  84   1              OLED_WR_Byte_Dat_Fast((u8*)OLED_GRAM, OLED_GRAM_SIZE);
-  85   1      }
-  86          
-  87          //OLED开显示
-  88          void OLED_Display_On(void)
-  89          {
-  90   1              OLED_WR_Byte(0X8D,OLED_CMD);
-  91   1              OLED_WR_Byte(0X14,OLED_CMD);
-  92   1              OLED_WR_Byte(0XAF,OLED_CMD);
-  93   1      }
-  94          
-  95          //OLED关显示
-  96          void OLED_Display_Off(void)
-  97          {
-  98   1              OLED_WR_Byte(0X8D,OLED_CMD);
-  99   1              OLED_WR_Byte(0X10,OLED_CMD);
- 100   1              OLED_WR_Byte(0XAE,OLED_CMD);
- 101   1      }
- 102          
- 103          //OLED清屏
- 104          void OLED_Clear(void)  
- 105          {  
- 106   1              u8 i,n;  
- 107   1              for(i=0;i<OLED_PAGE_MAX;i++)for(n=0;n<OLED_COL_MAX;n++)OLED_GRAM[n][i]=0X00;  
- 108   1              OLED_Refresh_Gram();
- 109   1      }
- 110          
- 111          //OLED画点                 
- 112          void OLED_DrawPoint(u8 x,u8 y,u8 mode)
- 113          {
- 114   1              u8 pos,bx,temp=0;
- 115   1              if(x>OLED_COL_MAX-1||y>OLED_ROW_MAX-1)return;
-C51 COMPILER V9.54   OLED                                                                  07/29/2022 15:20:17 PAGE 3   
+  54          /* 快速读写 ----------------------------------------*/
+  55          //向SSD1306写入一个字节。
+  56          //dat:要写入的数据/命令
+  57          //cmd:数据/命令标志 0,表示命令;1,表示数据;
+  58          static void OLED_WR_Byte_Fast(u8 *buf, u16 size, u8 cmd)
+  59          {
+  60   1              IIC_WR_Byte_Fast(buf, size, cmd);
+  61   1      }
+  62          
+  63          //向SSD1306写入一个字节数据。
+  64          //dat:要写入的数据
+  65          static void OLED_WR_Byte_Dat_Fast(u8 *Dat_Buf, u16 size)
+  66          {
+  67   1              IIC_WR_Byte_Dat_Fast(Dat_Buf, size);
+  68   1      }
+  69          
+  70          //向SSD1306写入一个字节命令。
+  71          //cmd:要写入的命令
+  72          static void OLED_WR_Byte_Cmd_Fast(u8 *Cmd_Buf, u16 size)
+  73          {
+  74   1              IIC_WR_Byte_Cmd_Fast(Cmd_Buf, size);
+  75   1      }
+  76          
+  77          /* 更新缓存到OLED ----------------------------------*/
+  78          void OLED_Refresh_Gram(void)
+  79          {
+  80   1              OLED_WR_Byte_Cmd (0xb0+0);
+  81   1              OLED_WR_Byte_Cmd (0x00);
+  82   1              OLED_WR_Byte_Cmd (0x10);
+  83   1              OLED_WR_Byte_Dat_Fast((u8*)OLED_GRAM, OLED_GRAM_SIZE);
+  84   1      }
+  85          
+  86          //OLED开显示
+  87          void OLED_Display_On(void)
+  88          {
+  89   1              OLED_WR_Byte_Cmd(0X8D);
+  90   1              OLED_WR_Byte_Cmd(0X14);
+  91   1              OLED_WR_Byte_Cmd(0XAF);
+  92   1      }
+  93          
+  94          //OLED关显示
+  95          void OLED_Display_Off(void)
+  96          {
+  97   1              OLED_WR_Byte_Cmd(0X8D);
+  98   1              OLED_WR_Byte_Cmd(0X10);
+  99   1              OLED_WR_Byte_Cmd(0XAE);
+ 100   1      }
+ 101          
+ 102          //OLED清屏
+ 103          void OLED_Clear(void)  
+ 104          {  
+ 105   1              u8 i,n;  
+ 106   1              for(i=0;i<OLED_PAGE_MAX;i++)for(n=0;n<OLED_COL_MAX;n++)OLED_GRAM[n][i]=0X00;  
+ 107   1              OLED_Refresh_Gram();
+ 108   1      }
+ 109          
+ 110          //OLED画点                 
+ 111          void OLED_DrawPoint(u8 x,u8 y,u8 mode)
+ 112          {
+ 113   1              u8 pos,bx,temp=0;
+ 114   1              if(x>OLED_COL_MAX-1||y>OLED_ROW_MAX-1)return;
+ 115   1              pos=7-y/8;
+C51 COMPILER V9.60.0.0   OLED                                                              12/03/2022 19:45:33 PAGE 3   
 
- 116   1              pos=7-y/8;
- 117   1              bx=y%8;
- 118   1              temp=1<<(7-bx);
- 119   1              if(mode)OLED_GRAM[x][pos]|=temp;
- 120   1              else OLED_GRAM[x][pos]&=~temp;
- 121   1      #if SHOW_EVERY_STEEP
+ 116   1              bx=y%8;
+ 117   1              temp=1<<(7-bx);
+ 118   1              if(mode)OLED_GRAM[x][pos]|=temp;
+ 119   1              else OLED_GRAM[x][pos]&=~temp;
+ 120   1      #if SHOW_EVERY_STEEP
                       OLED_Refresh_Gram();
               #endif
- 124   1      }
- 125          
- 126          /* ---------------- base graphics ---------------- */
- 127          
- 128          //OLED画线
- 129          void OLED_DrawLine(u8 x1,u8 y1,u8 x2,u8 y2,u8 mode)
- 130          {
- 131   1      #if OLED_DRAW_LINE_BRESENHAM
- 132   1              int16_t dx = x2 - x1, dy = y2 - y1;
- 133   1              Point_int16_t p = { 0, 0 };  //防止当 p.x=127或p.y=63 时卡死
- 134   1              uint8_t Point_Position_Inverse_Flag = 0X00;  // 0,1,2,3,4bit分别表示第一、二、三、四象限及关于 y=x 对称标
+ 123   1      }
+ 124          
+ 125          /* ---------------- base graphics ---------------- */
+ 126          
+ 127          //OLED画线
+ 128          void OLED_DrawLine(u8 x1,u8 y1,u8 x2,u8 y2,u8 mode)
+ 129          {
+ 130   1      #if OLED_DRAW_LINE_BRESENHAM
+ 131   1              int16_t dx = x2 - x1, dy = y2 - y1;
+ 132   1              Point_int16_t p = { 0, 0 };  //防止当 p.x=127或p.y=63 时卡死
+ 133   1              uint8_t Point_Position_Inverse_Flag = 0X00;  // 0,1,2,3,4bit分别表示第一、二、三、四象限及关于 y=x 对称标
              -识
- 135   1              int16_t incrE, incrNE, d;
- 136   1              Point temp;
- 137   1              
- 138   1              if(dy==0)                       // k==0
- 139   1              {
- 140   2                      if(dx<0)
- 141   2                      {
- 142   3                              dx = -dx;
- 143   3                              x1 ^= x2; x2 ^= x1; x1 ^= x2;
- 144   3                      }
- 145   2                      for(; p.x<=dx; p.x++)
- 146   2                              OLED_DrawPoint(p.x+x1, p.y+y1, mode);
- 147   2              }
- 148   1              else if(dx==0)                  // k不存在
- 149   1              {
- 150   2                      if(dy<0)
- 151   2                      {
- 152   3                              dy = -dy;
- 153   3                              y1 ^= y2; y2 ^= y1; y1 ^= y2;
- 154   3                      }
- 155   2                      for(; p.y<=dy; p.y++)
- 156   2                              OLED_DrawPoint(p.x+x1, p.y+y1, mode);
- 157   2              }
- 158   1              else
- 159   1              {
- 160   2                      //将 (x1, y1) 和 (x2, y2) 处理成第一象限中的情况
- 161   2                      //第三象限转换之后可以看成本来就是在第一象限中
- 162   2                      if(dx>0 && dy>0) Point_Position_Inverse_Flag |= 0X01;
- 163   2                      else if(dx>0 && dy <0)                          //处理第二象限
- 164   2                      {
- 165   3                              Point_Position_Inverse_Flag |= 0X02;
- 166   3                              dy = -dy;
- 167   3                              y2 = 2 * y1 - y2;
- 168   3                      }
- 169   2                      else if(dx<0 && dy < 0)                 //处理第三象限
- 170   2                      {
- 171   3                              Point_Position_Inverse_Flag |= 0X04;
- 172   3                              dx = -dx; dy = -dy;
- 173   3                              x1 ^= x2; x2 ^= x1; x1 ^= x2;
- 174   3                              y1 ^= y2; y2 ^= y1; y1 ^= y2;
- 175   3                      }
- 176   2                      else if(dx<0 && dy >0)          //处理第四象限
-C51 COMPILER V9.54   OLED                                                                  07/29/2022 15:20:17 PAGE 4   
+ 134   1              int16_t incrE, incrNE, d;
+ 135   1              Point temp;
+ 136   1              
+ 137   1              if(dy==0)                       // k==0
+ 138   1              {
+ 139   2                      if(dx<0)
+ 140   2                      {
+ 141   3                              dx = -dx;
+ 142   3                              x1 ^= x2; x2 ^= x1; x1 ^= x2;
+ 143   3                      }
+ 144   2                      for(; p.x<=dx; p.x++)
+ 145   2                              OLED_DrawPoint(p.x+x1, p.y+y1, mode);
+ 146   2              }
+ 147   1              else if(dx==0)                  // k不存在
+ 148   1              {
+ 149   2                      if(dy<0)
+ 150   2                      {
+ 151   3                              dy = -dy;
+ 152   3                              y1 ^= y2; y2 ^= y1; y1 ^= y2;
+ 153   3                      }
+ 154   2                      for(; p.y<=dy; p.y++)
+ 155   2                              OLED_DrawPoint(p.x+x1, p.y+y1, mode);
+ 156   2              }
+ 157   1              else
+ 158   1              {
+ 159   2                      //将 (x1, y1) 和 (x2, y2) 处理成第一象限中的情况
+ 160   2                      //第三象限转换之后可以看成本来就是在第一象限中
+ 161   2                      if(dx>0 && dy>0) Point_Position_Inverse_Flag |= 0X01;
+ 162   2                      else if(dx>0 && dy <0)                          //处理第二象限
+ 163   2                      {
+ 164   3                              Point_Position_Inverse_Flag |= 0X02;
+ 165   3                              dy = -dy;
+ 166   3                              y2 = 2 * y1 - y2;
+ 167   3                      }
+ 168   2                      else if(dx<0 && dy < 0)                 //处理第三象限
+ 169   2                      {
+ 170   3                              Point_Position_Inverse_Flag |= 0X04;
+ 171   3                              dx = -dx; dy = -dy;
+ 172   3                              x1 ^= x2; x2 ^= x1; x1 ^= x2;
+ 173   3                              y1 ^= y2; y2 ^= y1; y1 ^= y2;
+ 174   3                      }
+ 175   2                      else if(dx<0 && dy >0)          //处理第四象限
+ 176   2                      {
+C51 COMPILER V9.60.0.0   OLED                                                              12/03/2022 19:45:33 PAGE 4   
 
- 177   2                      {
- 178   3                              Point_Position_Inverse_Flag |= 0X08;
- 179   3                              dx = -dx;
- 180   3                              x2 = 2 * x1 - x2;
- 181   3                      }
- 182   2                      //将 (x1, y1) 和 (x2, y2) 处理成 0<k<=1 的情形（做变换 { x0'=x1, y0'=y1 }）
- 183   2                      if(dx<dy)
- 184   2                      {
- 185   3                              Point_Position_Inverse_Flag |= 0X10;
- 186   3                              temp.x = x2; temp.y = y2;
- 187   3                              x2 = x1 - y1 + temp.y;
- 188   3                              y2 = -x1 + y1 + temp.x;
- 189   3                              dx = x2 - x1; dy = y2 - y1;  // 重新计算 dx, dy 然后再处理成第一象限中的情况
- 190   3                      }
- 191   2                      
- 192   2                      incrE = 2 * dy, incrNE = 2 * (dy - dx);
- 193   2                      d = 2 * dy - dx;
- 194   2                      
- 195   2                      OLED_DrawPoint(p.x+x1, p.y+y1, mode);
- 196   2                      //开始计算点坐标偏移量
- 197   2                      for(p.x++; p.x<=dx; p.x++)
- 198   2                      {
- 199   3                              if(d<0){                        //从东方衍生出新的像素
- 200   4                                      d += incrE;
- 201   4                              }else{                          //从东北方衍生出新的像素
- 202   4                                      p.y++;
- 203   4                                      d += incrNE;
- 204   4                              }
- 205   3                              
- 206   3                              //绘制点
- 207   3                              /* -- 相对于点 (x0, y0) 为原点的反函数之坐标 --
- 208   3                                 -- x'= x0-y0+y --
- 209   3                                 -- y'=-x0+y0+x -- */
- 210   3                              switch(Point_Position_Inverse_Flag&0X0F)
- 211   3                              {
- 212   4                                      case 0X01:              //第一、三象限
- 213   4                                      case 0X04:
- 214   4                                              if(Point_Position_Inverse_Flag&0X10)
- 215   4                                                      OLED_DrawPoint(x1+p.y, y1+p.x, mode);
- 216   4                                              else
- 217   4                                                      OLED_DrawPoint(x1+p.x, y1+p.y, mode);
- 218   4                                              break;
- 219   4                                      case 0X02:              //第二象限
- 220   4                                              if(Point_Position_Inverse_Flag&0X10)
- 221   4                                                      OLED_DrawPoint(x1+p.y, y1-p.x, mode);
- 222   4                                              else
- 223   4                                                      OLED_DrawPoint(x1+p.x, y1-p.y, mode);
- 224   4                                              break;
- 225   4                                      case 0X08:              //第四象限
- 226   4                                              if(Point_Position_Inverse_Flag&0X10)
- 227   4                                                      OLED_DrawPoint(x1-p.y, y1+p.x, mode);
- 228   4                                              else
- 229   4                                                      OLED_DrawPoint(x1-p.x, y1+p.y, mode);
- 230   4                                              break;
- 231   4                                      default: break;
- 232   4                              }
- 233   3                      }
- 234   2              }
- 235   1      #else
+ 177   3                              Point_Position_Inverse_Flag |= 0X08;
+ 178   3                              dx = -dx;
+ 179   3                              x2 = 2 * x1 - x2;
+ 180   3                      }
+ 181   2                      //将 (x1, y1) 和 (x2, y2) 处理成 0<k<=1 的情形（做变换 { x0'=x1, y0'=y1 }）
+ 182   2                      if(dx<dy)
+ 183   2                      {
+ 184   3                              Point_Position_Inverse_Flag |= 0X10;
+ 185   3                              temp.x = x2; temp.y = y2;
+ 186   3                              x2 = x1 - y1 + temp.y;
+ 187   3                              y2 = -x1 + y1 + temp.x;
+ 188   3                              dx = x2 - x1; dy = y2 - y1;  // 重新计算 dx, dy 然后再处理成第一象限中的情况
+ 189   3                      }
+ 190   2                      
+ 191   2                      incrE = 2 * dy, incrNE = 2 * (dy - dx);
+ 192   2                      d = 2 * dy - dx;
+ 193   2                      
+ 194   2                      OLED_DrawPoint(p.x+x1, p.y+y1, mode);
+ 195   2                      //开始计算点坐标偏移量
+ 196   2                      for(p.x++; p.x<=dx; p.x++)
+ 197   2                      {
+ 198   3                              if(d<0){                        //从东方衍生出新的像素
+ 199   4                                      d += incrE;
+ 200   4                              }else{                          //从东北方衍生出新的像素
+ 201   4                                      p.y++;
+ 202   4                                      d += incrNE;
+ 203   4                              }
+ 204   3                              
+ 205   3                              //绘制点
+ 206   3                              /* -- 相对于点 (x0, y0) 为原点的反函数之坐标 --
+ 207   3                                 -- x'= x0-y0+y --
+ 208   3                                 -- y'=-x0+y0+x -- */
+ 209   3                              switch(Point_Position_Inverse_Flag&0X0F)
+ 210   3                              {
+ 211   4                                      case 0X01:              //第一、三象限
+ 212   4                                      case 0X04:
+ 213   4                                              if(Point_Position_Inverse_Flag&0X10)
+ 214   4                                                      OLED_DrawPoint(x1+p.y, y1+p.x, mode);
+ 215   4                                              else
+ 216   4                                                      OLED_DrawPoint(x1+p.x, y1+p.y, mode);
+ 217   4                                              break;
+ 218   4                                      case 0X02:              //第二象限
+ 219   4                                              if(Point_Position_Inverse_Flag&0X10)
+ 220   4                                                      OLED_DrawPoint(x1+p.y, y1-p.x, mode);
+ 221   4                                              else
+ 222   4                                                      OLED_DrawPoint(x1+p.x, y1-p.y, mode);
+ 223   4                                              break;
+ 224   4                                      case 0X08:              //第四象限
+ 225   4                                              if(Point_Position_Inverse_Flag&0X10)
+ 226   4                                                      OLED_DrawPoint(x1-p.y, y1+p.x, mode);
+ 227   4                                              else
+ 228   4                                                      OLED_DrawPoint(x1-p.x, y1+p.y, mode);
+ 229   4                                              break;
+ 230   4                                      default: break;
+ 231   4                              }
+ 232   3                      }
+ 233   2              }
+ 234   1      #else
                       u32 t; 
                       int xerr=0, yerr=0, delta_x, delta_y, distance; 
                       int incx, incy, uRow, uCol; 
-C51 COMPILER V9.54   OLED                                                                  07/29/2022 15:20:17 PAGE 5   
-
                       delta_x = x2-x1;
+C51 COMPILER V9.60.0.0   OLED                                                              12/03/2022 19:45:33 PAGE 5   
+
                       delta_y = y2-y1; 
                       uRow = x1; 
                       uCol = y1;
@@ -286,210 +285,218 @@ line level    source
                               }
                       }
               #endif
- 269   1      }
- 270          
- 271          //OLED画方
- 272          void OLED_DrawCube(u8 x1,u8 y1,u8 x2,u8 y2, u8 mode)
- 273          {
- 274   1              OLED_DrawLine(x1,y1,x2,y1,mode);
- 275   1              OLED_DrawLine(x1,y2,x2,y2,mode);
- 276   1              OLED_DrawLine(x1,y1,x1,y2,mode);
- 277   1              OLED_DrawLine(x2,y1,x2,y2,mode);
- 278   1      }
- 279          
- 280          /* ---------------- message ---------------- */
- 281          
- 282          //OLED画BMP
- 283          void OLED_ShowBMP(u8 x,u8 y,const u8 *p,u8 width,u8 height,u8 mode)
- 284          {
- 285   1              u8 u_x, u_y;
- 286   1              u8 temp;
- 287   1              u8 csize;
- 288   1              u8 i, j;
- 289   1              
- 290   1              if(x>OLED_COL_MAX-1 || y>OLED_ROW_MAX-1) return;
- 291   1              u_x = x; u_y = y;
- 292   1              csize = (height/8 + ((height%8)?1:0))*width;
- 293   1              for(i=0; i<csize; i++)
- 294   1              {
- 295   2                      temp = *p;
- 296   2                      for(j=0; j<8; j++)
- 297   2                      {
- 298   3                              temp&0X80 ? OLED_DrawPoint(u_x,u_y,mode) : OLED_DrawPoint(u_x,u_y,!mode);
- 299   3                              temp <<= 1;
- 300   3                              u_y++;
-C51 COMPILER V9.54   OLED                                                                  07/29/2022 15:20:17 PAGE 6   
+ 268   1      }
+ 269          
+ 270          //OLED画方
+ 271          void OLED_DrawCube(u8 x1,u8 y1,u8 x2,u8 y2, u8 mode)
+ 272          {
+ 273   1              OLED_DrawLine(x1,y1,x2,y1,mode);
+ 274   1              OLED_DrawLine(x1,y2,x2,y2,mode);
+ 275   1              OLED_DrawLine(x1,y1,x1,y2,mode);
+ 276   1              OLED_DrawLine(x2,y1,x2,y2,mode);
+ 277   1      }
+ 278          
+ 279          /* ---------------- message ---------------- */
+ 280          
+ 281          //OLED画BMP
+ 282          void OLED_ShowBMP(u8 x,u8 y,const u8 *p,u8 width,u8 height,u8 mode)
+ 283          {
+ 284   1              u8 u_x, u_y;
+ 285   1              u8 temp;
+ 286   1              u8 csize;
+ 287   1              u8 i, j;
+ 288   1              
+ 289   1              if(x>OLED_COL_MAX-1 || y>OLED_ROW_MAX-1) return;
+ 290   1              u_x = x; u_y = y;
+ 291   1              csize = (height/8 + ((height%8)?1:0))*width;
+ 292   1              for(i=0; i<csize; i++)
+ 293   1              {
+ 294   2                      temp = *p;
+ 295   2                      for(j=0; j<8; j++)
+ 296   2                      {
+ 297   3                              temp&0X80 ? OLED_DrawPoint(u_x,u_y,mode) : OLED_DrawPoint(u_x,u_y,!mode);
+ 298   3                              temp <<= 1;
+ 299   3                              u_y++;
+ 300   3                              if((u_y-y)==height)
+C51 COMPILER V9.60.0.0   OLED                                                              12/03/2022 19:45:33 PAGE 6   
 
- 301   3                              if((u_y-y)==height)
- 302   3                              {
- 303   4                                      u_y = y;
- 304   4                                      u_x++;
- 305   4                                      break;
- 306   4                              }
- 307   3                      }
- 308   2                      p++;
- 309   2              }
- 310   1      }
- 311          
- 312          //OLED填充
- 313          void OLED_Fill(u8 x1,u8 y1,u8 x2,u8 y2,u8 mode)
- 314          {  
- 315   1              u8 x,y;  
- 316   1              for(x=x1;x<=x2;x++)
- 317   1              {
- 318   2                      for(y=y1;y<=y2;y++)OLED_DrawPoint(x,y,mode);
- 319   2              }
- 320   1              OLED_Refresh_Gram();
- 321   1      }
- 322          
- 323          //OLED显示字符
- 324          void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 size,u8 mode)
- 325          {                           
- 326   1              u8 temp,t,t1;
- 327   1              u8 y0=y;
- 328   1              u8 csize=(size/8+((size%8)?1:0))*(size/2);
- 329   1              chr=chr-' ';
- 330   1          for(t=0;t<csize;t++)
- 331   1          {   
- 332   2                      if(size==12)temp=asc2_1206[chr][t];
- 333   2                      else if(size==16)temp=asc2_1608[chr][t];
- 334   2                      else if(size==24)temp=asc2_2412[chr][t];
- 335   2                      else return;
- 336   2              for(t1=0;t1<8;t1++)
- 337   2                      {
- 338   3                              if(temp&0x80)OLED_DrawPoint(x,y,mode);
- 339   3                              else OLED_DrawPoint(x,y,!mode);
- 340   3                              temp<<=1;
- 341   3                              y++;
- 342   3                              if((y-y0)==size)
- 343   3                              {
- 344   4                                      y=y0;
- 345   4                                      x++;
- 346   4                                      break;
- 347   4                              }
- 348   3                      }        
- 349   2          }          
- 350   1      }
- 351          
- 352          //OLED显示数字
- 353          void OLED_ShowNum(u8 x,u8 y,u32 num,u8 len,u8 size,u8 mode)
- 354          {               
- 355   1              u8 t,temp;
- 356   1              u8 enshow=0;                                               
- 357   1              for(t=0;t<len;t++)
- 358   1              {
- 359   2                      temp=(num/mypow(10,len-t-1))%10;
- 360   2                      if(enshow==0&&t<(len-1))
- 361   2                      {
- 362   3                              if(temp==0)
-C51 COMPILER V9.54   OLED                                                                  07/29/2022 15:20:17 PAGE 7   
+ 301   3                              {
+ 302   4                                      u_y = y;
+ 303   4                                      u_x++;
+ 304   4                                      break;
+ 305   4                              }
+ 306   3                      }
+ 307   2                      p++;
+ 308   2              }
+ 309   1      }
+ 310          
+ 311          //OLED填充
+ 312          void OLED_Fill(u8 x1,u8 y1,u8 x2,u8 y2,u8 mode)
+ 313          {  
+ 314   1              u8 x,y;  
+ 315   1              for(x=x1;x<=x2;x++)
+ 316   1              {
+ 317   2                      for(y=y1;y<=y2;y++)OLED_DrawPoint(x,y,mode);
+ 318   2              }
+ 319   1              OLED_Refresh_Gram();
+ 320   1      }
+ 321          
+ 322          //OLED显示字符
+ 323          void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 size,u8 mode)
+ 324          {                           
+ 325   1              u8 temp,t,t1;
+ 326   1              u8 y0=y;
+ 327   1              u8 csize=(size/8+((size%8)?1:0))*(size/2);
+ 328   1              chr=chr-' ';
+ 329   1          for(t=0;t<csize;t++)
+ 330   1          {   
+ 331   2                      if(size==12)temp=asc2_1206[chr][t];
+ 332   2                      else if(size==16)temp=asc2_1608[chr][t];
+ 333   2                      else if(size==24)temp=asc2_2412[chr][t];
+ 334   2                      else return;
+ 335   2              for(t1=0;t1<8;t1++)
+ 336   2                      {
+ 337   3                              if(temp&0x80)OLED_DrawPoint(x,y,mode);
+ 338   3                              else OLED_DrawPoint(x,y,!mode);
+ 339   3                              temp<<=1;
+ 340   3                              y++;
+ 341   3                              if((y-y0)==size)
+ 342   3                              {
+ 343   4                                      y=y0;
+ 344   4                                      x++;
+ 345   4                                      break;
+ 346   4                              }
+ 347   3                      }        
+ 348   2          }          
+ 349   1      }
+ 350          
+ 351          //OLED显示数字
+ 352          void OLED_ShowNum(u8 x,u8 y,u32 num,u8 len,u8 size,u8 mode)
+ 353          {               
+ 354   1              u8 t,temp;
+ 355   1              u8 enshow=0;                                               
+ 356   1              for(t=0;t<len;t++)
+ 357   1              {
+ 358   2                      temp=(num/mypow(10,len-t-1))%10;
+ 359   2                      if(enshow==0&&t<(len-1))
+ 360   2                      {
+ 361   3                              if(temp==0)
+ 362   3                              {
+C51 COMPILER V9.60.0.0   OLED                                                              12/03/2022 19:45:33 PAGE 7   
 
- 363   3                              {
- 364   4                                      OLED_ShowChar(x+(size/2)*t,y,' ',size,mode);
- 365   4                                      continue;
- 366   4                              }else enshow=1; 
- 367   3                               
- 368   3                      }
- 369   2                      OLED_ShowChar(x+(size/2)*t,y,temp+'0',size,1); 
- 370   2              }
- 371   1      }
- 372          
- 373          //OLED显示数字，自动计算数字位数
- 374          void OLED_ShowNums(u8 x,u8 y,u32 nums,u8 size,u8 mode)
- 375          {
- 376   1              u8 digit = 0;
- 377   1              u32 temp = nums;
- 378   1              
- 379   1              do{
- 380   2                      temp /= 10;
- 381   2                      digit++;
- 382   2              }while(temp);
- 383   1              OLED_ShowNum(x, y, nums, digit, size, mode);
- 384   1      }
- 385          
- 386          //OLED显示小数
- 387          void OLED_ShowDecimal(u8 x, u8 y, u32 Int_Part, u8 Dec_Part, u8 size, u8 mode)
- 388          {
- 389   1              u8 digital = 0;
- 390   1              u8 temp = Int_Part;
- 391   1              
- 392   1              do{
- 393   2                      temp /= 10;
- 394   2                      digital++;
- 395   2              }while(temp);
- 396   1              
- 397   1              OLED_ShowNums(x, y, Int_Part, size, mode);
- 398   1              OLED_ShowChar(x+digital*(size/2), y, '.', size, mode);
- 399   1              OLED_ShowNums(x+(digital+1)*(size/2), y, Dec_Part, size, mode);
- 400   1      }
- 401          
- 402          //OLED显示字符串
- 403          void OLED_ShowString(u8 x,u8 y,const u8 *p,u8 size,u8 mode)
- 404          {       
- 405   1          while((*p<='~')&&(*p>=' '))
- 406   1          {       
- 407   2              if(x>(OLED_COL_MAX-(size/2))){x=0;y+=size;}
- 408   2              if(y>(OLED_ROW_MAX-size)){y=x=0;OLED_Clear();}
- 409   2              OLED_ShowChar(x,y,*p,size,mode);         
- 410   2              x+=size/2;
- 411   2              p++;
- 412   2          }
- 413   1      }
- 414          
- 415          /* ---------------- message ---------------- */
- 416          
- 417          /* ---------------- inition ---------------- */
- 418          
- 419          static void OLED_GPIO_Init(void)
- 420          {
- 421   1              IIC_GPIO_Config();
- 422   1      }
- 423          
- 424          //初始化OLED
-C51 COMPILER V9.54   OLED                                                                  07/29/2022 15:20:17 PAGE 8   
+ 363   4                                      OLED_ShowChar(x+(size/2)*t,y,' ',size,mode);
+ 364   4                                      continue;
+ 365   4                              }else enshow=1; 
+ 366   3                               
+ 367   3                      }
+ 368   2                      OLED_ShowChar(x+(size/2)*t,y,temp+'0',size,1); 
+ 369   2              }
+ 370   1      }
+ 371          
+ 372          //OLED显示数字，自动计算数字位数
+ 373          void OLED_ShowNums(u8 x,u8 y,u32 nums,u8 size,u8 mode)
+ 374          {
+ 375   1              u8 digit = 0;
+ 376   1              u32 temp = nums;
+ 377   1              
+ 378   1              do{
+ 379   2                      temp /= 10;
+ 380   2                      digit++;
+ 381   2              }while(temp);
+ 382   1              OLED_ShowNum(x, y, nums, digit, size, mode);
+ 383   1      }
+ 384          
+ 385          //OLED显示小数
+ 386          void OLED_ShowDecimal(u8 x, u8 y, u32 Int_Part, u8 Dec_Part, u8 size, u8 mode)
+ 387          {
+ 388   1              u8 digital = 0;
+ 389   1              u8 temp = Int_Part;
+ 390   1              
+ 391   1              do{
+ 392   2                      temp /= 10;
+ 393   2                      digital++;
+ 394   2              }while(temp);
+ 395   1              
+ 396   1              OLED_ShowNums(x, y, Int_Part, size, mode);
+ 397   1              OLED_ShowChar(x+digital*(size/2), y, '.', size, mode);
+ 398   1              OLED_ShowNums(x+(digital+1)*(size/2), y, Dec_Part, size, mode);
+ 399   1      }
+ 400          
+ 401          //OLED显示字符串
+ 402          void OLED_ShowString(u8 x,u8 y,const u8 *p,u8 size,u8 mode)
+ 403          {       
+ 404   1          while((*p<='~')&&(*p>=' '))
+ 405   1          {       
+ 406   2              if(x>(OLED_COL_MAX-(size/2))){x=0;y+=size;}
+ 407   2              if(y>(OLED_ROW_MAX-size)){y=x=0;OLED_Clear();}
+ 408   2              OLED_ShowChar(x,y,*p,size,mode);         
+ 409   2              x+=size/2;
+ 410   2              p++;
+ 411   2          }
+ 412   1      }
+ 413          
+ 414          /* ---------------- message ---------------- */
+ 415          
+ 416          /* ---------------- inition ---------------- */
+ 417          
+ 418          static void OLED_GPIO_Init(void)
+ 419          {
+ 420   1              #ifdef USE_SOFT_IIC
+                              IIC_GPIO_Config();
+                      #endif /* USE_SOFT_IIC */
+ 423   1              #ifdef USE_HARD_IIC
+ 424   1                      I2C_GPIO_Config();
+C51 COMPILER V9.60.0.0   OLED                                                              12/03/2022 19:45:33 PAGE 8   
 
- 425          void OLED_Init(void)
- 426          {
- 427   1              OLED_GPIO_Init();
- 428   1                                                
- 429   1              OLED_WR_Byte_Cmd(0xAE);
- 430   1              OLED_WR_Byte_Cmd(0xD5);
- 431   1              OLED_WR_Byte_Cmd(80);  
- 432   1              OLED_WR_Byte_Cmd(0xA8);
- 433   1              OLED_WR_Byte_Cmd(0X3F);
- 434   1              OLED_WR_Byte_Cmd(0xD3);
- 435   1              OLED_WR_Byte_Cmd(0X00);
- 436   1      
- 437   1              OLED_WR_Byte_Cmd(0x40);
- 438   1                                                                      
- 439   1              OLED_WR_Byte_Cmd(0x8D);
- 440   1              OLED_WR_Byte_Cmd(0x14);
- 441   1              OLED_WR_Byte_Cmd(0x20);
- 442   1              OLED_WR_Byte_Cmd(0x01);         // 垂直地址模式
- 443   1              OLED_WR_Byte_Cmd(0xA1);
- 444   1              OLED_WR_Byte_Cmd(0xC0);
- 445   1              OLED_WR_Byte_Cmd(0xDA);
- 446   1              OLED_WR_Byte_Cmd(0x12);
- 447   1                       
- 448   1              OLED_WR_Byte_Cmd(0x81);
- 449   1              OLED_WR_Byte_Cmd(0xEF);
- 450   1              OLED_WR_Byte_Cmd(0xD9);
- 451   1              OLED_WR_Byte_Cmd(0xF1);
- 452   1              OLED_WR_Byte_Cmd(0xDB);
- 453   1              OLED_WR_Byte_Cmd(0x30);
- 454   1      
- 455   1              OLED_WR_Byte_Cmd(0xA4);
- 456   1              OLED_WR_Byte_Cmd(0xA6);
- 457   1              OLED_WR_Byte_Cmd(0xAF);
- 458   1              
- 459   1              OLED_Clear();
- 460   1      }
- 461          
- 462          /* ---------------- inition ---------------- */
+ 425   1              #endif /* USE_HARD_IIC */
+ 426   1      }
+ 427          
+ 428          //初始化OLED
+ 429          void OLED_Init(void)
+ 430          {
+ 431   1              OLED_GPIO_Init();
+ 432   1              #ifdef USE_HARD_IIC
+ 433   1                      I2C_Config();
+ 434   1              #endif /* USE_HARD_IIC */
+ 435   1                                                
+ 436   1              OLED_WR_Byte_Cmd(0xAE);
+ 437   1              OLED_WR_Byte_Cmd(0xD5);
+ 438   1              OLED_WR_Byte_Cmd(80);  
+ 439   1              OLED_WR_Byte_Cmd(0xA8);
+ 440   1              OLED_WR_Byte_Cmd(0X3F);
+ 441   1              OLED_WR_Byte_Cmd(0xD3);
+ 442   1              OLED_WR_Byte_Cmd(0X00);
+ 443   1      
+ 444   1              OLED_WR_Byte_Cmd(0x40);
+ 445   1                                                                      
+ 446   1              OLED_WR_Byte_Cmd(0x8D);
+ 447   1              OLED_WR_Byte_Cmd(0x14);
+ 448   1              OLED_WR_Byte_Cmd(0x20);
+ 449   1              OLED_WR_Byte_Cmd(0x01);         // 垂直地址模式
+ 450   1              OLED_WR_Byte_Cmd(0xA1);
+ 451   1              OLED_WR_Byte_Cmd(0xC0);
+ 452   1              OLED_WR_Byte_Cmd(0xDA);
+ 453   1              OLED_WR_Byte_Cmd(0x12);
+ 454   1                       
+ 455   1              OLED_WR_Byte_Cmd(0x81);
+ 456   1              OLED_WR_Byte_Cmd(0xEF);
+ 457   1              OLED_WR_Byte_Cmd(0xD9);
+ 458   1              OLED_WR_Byte_Cmd(0xF1);
+ 459   1              OLED_WR_Byte_Cmd(0xDB);
+ 460   1              OLED_WR_Byte_Cmd(0x30);
+ 461   1      
+ 462   1              OLED_WR_Byte_Cmd(0xA4);
+ 463   1              OLED_WR_Byte_Cmd(0xA6);
+ 464   1              OLED_WR_Byte_Cmd(0xAF);
+ 465   1              
+ 466   1              OLED_Clear();
+ 467   1      }
+ 468          
+ 469          /* ---------------- inition ---------------- */
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   2968    ----
+   CODE SIZE        =   3014    ----
    CONSTANT SIZE    =   6084    ----
    XDATA SIZE       =   1024     107
    PDATA SIZE       =   ----    ----

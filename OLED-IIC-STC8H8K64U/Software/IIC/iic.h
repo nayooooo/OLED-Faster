@@ -10,18 +10,18 @@
 /**********************************************
 //		GND -> GND
 //		VCC -> VCC
-//		SDA -> P1.4
-//		SCL -> P1.5
+//		SDA -> P2.4
+//		SCL -> P2.5
 **********************************************/
 
 #define SLAVE_ADDRESS 0x78  // OLED地址
 
 /* IIC GPIO端口定义 ------------------------------------------------*/
-#define IIC_GPIO_Port	GPIO_P1
+#define IIC_GPIO_Port	GPIO_P2
 #define SDA_Pin			GPIO_Pin_4
 #define SCL_Pin			GPIO_Pin_5
-#define IIC_SDA			P14
-#define IIC_SCL			P15
+#define IIC_SDA			P24
+#define IIC_SCL			P25
 
 #define SDA_IN()		IIC_SDA = 1
 #define SDA_Clr()		IIC_SDA = 1

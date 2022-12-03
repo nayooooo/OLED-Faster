@@ -1,15 +1,25 @@
 /**********************************************
 //		GND -> GND
 //		VCC -> VCC
-//		SDA -> P1.4
-//		SCL -> P1.5
+//		SDA -> P2.4
+//		SCL -> P2.5
 **********************************************/
 #ifndef __OLED_H
 #define __OLED_H			  	 
 #include "config.h"
 #include "stdlib.h"
 
-#define SLAVE_ADDRESS 0x78
+#define USE_HARD_IIC
+//#define USE_SOFT_IIC
+
+#ifdef USE_SOFT_IIC
+	#include "iic.h"
+#endif /* USE_SOFT_IIC */
+#ifdef USE_HARD_IIC
+	#include "MyI2C.h"
+#endif /* USE_HARD_IIC */
+
+#define SLAVE_ADDRESS (0x78)
 
 #define OLED_COL_MAX (128)
 #define OLED_ROW_MAX (64)

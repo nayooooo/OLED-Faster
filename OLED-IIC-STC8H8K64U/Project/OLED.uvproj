@@ -45,7 +45,7 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>..\Obj\</OutputDirectory>
+          <OutputDirectory>.\Object\</OutputDirectory>
           <OutputName>OLED</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
@@ -125,7 +125,7 @@
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
           <Simulator>
-            <UseSimulator>1</UseSimulator>
+            <UseSimulator>0</UseSimulator>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
             <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
@@ -137,7 +137,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
-            <UseTarget>0</UseTarget>
+            <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
             <RunToMain>0</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
@@ -149,7 +149,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>-1</TargetSelection>
+          <TargetSelection>10</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -163,7 +163,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver></Driver>
+            <Driver>BIN\STCMON51.DLL</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -324,7 +324,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\Fwlib;..\Hardware\LED;..\Hardware\OLED;..\Software\IIC;..\User;..\System\MyTimer</IncludePath>
+              <IncludePath>..\Fwlib;..\Hardware\LED;..\Hardware\OLED;..\User;..\System\MyTimer;..\System\MyI2C;..\System\MyUART</IncludePath>
             </VariousControls>
           </C51>
           <Ax51>
@@ -391,6 +391,16 @@
               <FileType>1</FileType>
               <FilePath>..\Fwlib\timer.c</FilePath>
             </File>
+            <File>
+              <FileName>I2C.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Fwlib\I2C.c</FilePath>
+            </File>
+            <File>
+              <FileName>UART.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Fwlib\UART.C</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -400,6 +410,16 @@
               <FileName>MyTimer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\System\MyTimer\MyTimer.c</FilePath>
+            </File>
+            <File>
+              <FileName>MyI2C.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\System\MyI2C\MyI2C.c</FilePath>
+            </File>
+            <File>
+              <FileName>MyUART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\System\MyUART\MyUART.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -435,13 +455,6 @@
         </Group>
         <Group>
           <GroupName>SOFTWARE</GroupName>
-          <Files>
-            <File>
-              <FileName>iic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Software\IIC\iic.c</FilePath>
-            </File>
-          </Files>
         </Group>
       </Groups>
     </Target>

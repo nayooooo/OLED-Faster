@@ -48,9 +48,16 @@ typedef struct
 
 extern	u8 	I2C_BUF_type I2C_RxBuffer[I2C_BUF_LENTH];
 
+void Wait();
+void Start();
+void SendData(char dat);
+void RecvACK();
+char RecvData();
+void SendACK();
+void SendNAK();
+void Stop();
 
 void	I2C_Init(I2C_InitTypeDef *I2Cx);
-void	WriteNbyte(u8 addr, u8 *p, u8 number);
 void	ReadNbyte( u8 addr, u8 *p, u8 number);
 
 #endif

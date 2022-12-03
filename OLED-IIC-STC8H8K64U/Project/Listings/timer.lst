@@ -1,11 +1,11 @@
-C51 COMPILER V9.54   TIMER                                                                 07/29/2022 15:20:16 PAGE 1   
+C51 COMPILER V9.60.0.0   TIMER                                                             12/03/2022 19:45:33 PAGE 1   
 
 
-C51 COMPILER V9.54, COMPILATION OF MODULE TIMER
-OBJECT MODULE PLACED IN ..\Obj\timer.obj
-COMPILER INVOKED BY: D:\keil 5 - C51\C51\BIN\C51.EXE ..\Fwlib\timer.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Fwlib;..\
-                    -Hardware\LED;..\Hardware\OLED;..\Software\IIC;..\User;..\System\MyTimer) DEBUG OBJECTEXTEND PRINT(.\Listings\timer.lst) 
-                    -OBJECT(..\Obj\timer.obj)
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE TIMER
+OBJECT MODULE PLACED IN .\Object\timer.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\Fwlib\timer.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Fwlib;..\Hardw
+                    -are\LED;..\Hardware\OLED;..\User;..\System\MyTimer;..\System\MyI2C;..\System\MyUART) DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\timer.lst) OBJECT(.\Object\timer.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   51          // 版本: V1.0, 2012-10-22
   52          //========================================================================
   53          u8      Timer_Inilize(u8 TIM, TIM_InitTypeDef *TIMx)
-C51 COMPILER V9.54   TIMER                                                                 07/29/2022 15:20:16 PAGE 2   
+C51 COMPILER V9.60.0.0   TIMER                                                             12/03/2022 19:45:33 PAGE 2   
 
   54          {
   55   1              if(TIM > Timer4)        return 1;       //空操作
@@ -126,7 +126,7 @@ line level    source
  109   2                      else            Timer2_AsTimer();               //定时
  110   2                      if(TIMx->TIM_ClkOut == ENABLE)  Timer2_CLKO_Enable();           //输出时钟
  111   2                      else            Timer2_CLKO_Disable();  //不输出时钟
-C51 COMPILER V9.54   TIMER                                                                 07/29/2022 15:20:16 PAGE 3   
+C51 COMPILER V9.60.0.0   TIMER                                                             12/03/2022 19:45:33 PAGE 3   
 
  112   2      
  113   2                      T2_Load(TIMx->TIM_Value);
@@ -174,7 +174,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    772    ----
+   CODE SIZE        =    829    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

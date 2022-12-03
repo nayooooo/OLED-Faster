@@ -2,6 +2,7 @@
 #define __MYTIMER_H
 
 #include "config.h"
+#include "timer.h"
 
 /*---------------- 隐藏使用的定时器 ----------------*/
 

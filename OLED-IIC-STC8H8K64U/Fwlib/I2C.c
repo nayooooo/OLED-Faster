@@ -14,8 +14,8 @@
 
 u8 	I2C_BUF_type I2C_RxBuffer[I2C_BUF_LENTH];
 
-#define SLAW    0xA2
-#define SLAR    0xA3
+#define SLAW    0XA2
+#define SLAR    0XA3
 
 //========================================================================
 // 函数: void	I2C_Init(I2C_InitTypeDef *I2Cx)
@@ -166,31 +166,6 @@ void Stop()
 {
 	I2CMSCR = 0x06;                         //发送STOP命令
 	Wait();
-}
-
-//========================================================================
-// 函数: void	WriteNbyte(u8 addr, u8 *p, u8 number)
-// 描述: I2C写入数据函数.
-// 参数: addr: 指定地址, *p写入数据存储位置, number写入数据个数.
-// 返回: none.
-// 版本: V1.0, 2020-09-15
-//========================================================================
-void WriteNbyte(u8 addr, u8 *p, u8 number)  /*  WordAddress,First Data Address,Byte lenth   */
-{
-	EAXSFR();		/* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展SFR(XSFR) */
-	Start();                                //发送起始命令
-	SendData(SLAW);                         //发送设备地址+写命令
-	RecvACK();
-	SendData(addr);                         //发送存储地址
-	RecvACK();
-	do
-	{
-		SendData(*p++);
-		RecvACK();
-	}
-	while(--number);
-	Stop();                                 //发送停止命令
-	EAXRAM();		/* MOVX A,@DPTR/MOVX @DPTR,A指令的操作对象为扩展RAM(XRAM) */
 }
 
 //========================================================================
