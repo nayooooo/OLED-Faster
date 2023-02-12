@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   I2C                                                               12/03/2022 19:45:33 PAGE 1   
+C51 COMPILER V9.60.0.0   I2C                                                               12/03/2022 20:07:09 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE I2C
@@ -62,7 +62,7 @@ line level    source
   51   2                      else                                                                    I2C_ESTOI_DIS();        //禁止从机接收STOP信号中断
   52   2                      I2C_Address(I2Cx->I2C_SL_ADR);
   53   2                      if(I2Cx->I2C_SL_MA == ENABLE)           I2C_MATCH_EN(); //从机地址比较功能，只接受相匹配地址
-C51 COMPILER V9.60.0.0   I2C                                                               12/03/2022 19:45:33 PAGE 2   
+C51 COMPILER V9.60.0.0   I2C                                                               12/03/2022 20:07:09 PAGE 2   
 
   54   2                      else                                                                    I2C_MATCH_DIS();        //禁止从机地址比较功能，接受所有设备地址
   55   2              }
@@ -126,7 +126,7 @@ line level    source
  113   1              Wait();
  114   1      }
  115          
-C51 COMPILER V9.60.0.0   I2C                                                               12/03/2022 19:45:33 PAGE 3   
+C51 COMPILER V9.60.0.0   I2C                                                               12/03/2022 20:07:09 PAGE 3   
 
  116          //========================================================================
  117          // 函数: char RecvData (void)
@@ -190,7 +190,7 @@ line level    source
  175          // 返回: none.
  176          // 版本: V1.0, 2020-09-15
  177          //========================================================================
-C51 COMPILER V9.60.0.0   I2C                                                               12/03/2022 19:45:33 PAGE 4   
+C51 COMPILER V9.60.0.0   I2C                                                               12/03/2022 20:07:09 PAGE 4   
 
  178          void ReadNbyte(u8 addr, u8 *p, u8 number)   /*  WordAddress,First Data Address,Byte lenth   */
  179          {

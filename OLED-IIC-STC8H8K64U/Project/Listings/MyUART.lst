@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   MYUART                                                            12/03/2022 19:45:33 PAGE 1   
+C51 COMPILER V9.60.0.0   MYUART                                                            12/03/2022 20:07:09 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MYUART
@@ -62,7 +62,7 @@ line level    source
   51   1      }
   52          
   53          void My_UART_Init(void)
-C51 COMPILER V9.60.0.0   MYUART                                                            12/03/2022 19:45:33 PAGE 2   
+C51 COMPILER V9.60.0.0   MYUART                                                            12/03/2022 20:07:09 PAGE 2   
 
   54          {
   55   1              UART_GPIO_Config();
@@ -126,7 +126,7 @@ line level    source
  113   2                      else    COM1.B_TX_busy = 0;
  114   2              }
  115   1      }
-C51 COMPILER V9.60.0.0   MYUART                                                            12/03/2022 19:45:33 PAGE 3   
+C51 COMPILER V9.60.0.0   MYUART                                                            12/03/2022 20:07:09 PAGE 3   
 
 
 
